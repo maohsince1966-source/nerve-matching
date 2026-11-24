@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>神経伝導路 パズル（全14経路）</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-light: #eff6ff;
+      --primary-border: #bfdbfe;
+      --success: #16a34a;
+      --success-light: #dcfce7;
+      --danger: #dc2626;
+      --danger-light: #fee2e2;
+      --cross: #d97706;
+      --cross-light: #fef3c7;
+      --cross-border: #fcd34d;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #cbd5e1;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 540px;
+      margin: 0 auto;
+      min-height: 100vh;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ヘッダー */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .header-title-wrap {
+      display: flex;
+      flex-direction: column;
+    }
+
+    h1 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      margin: 0;
+      color: var(--primary);
+      letter-spacing: -0.02em;
+    }
+
+    .header-sub {
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .sound-btn {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--text);
+      transition: background-color 0.15s;
+    }
+
+    .sound-btn:active {
+      background: #e2e8f0;
+    }
+
+    /* 画面切り替え */
+    .screen {
+      display: none;
+      flex-direction: column;
+      gap: 14px;
+      flex: 1;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    /* 共通カード・ボタン */
+    .section-card {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+      border: 1px solid #e2e8f0;
+    }
+
+    .section-title {
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--muted);
+      margin: 0 0 10px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .primary-btn {
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      width: 100%;
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
+      transition: transform 0.1s, opacity 0.15s;
+    }
+
+    .primary-btn:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+
+    .primary-btn:disabled {
+      background: #94a3b8;
+      box-shadow: none;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+
+    .secondary-btn {
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.15s;
+    }
+
+    .secondary-btn:active {
+      background: #f1f5f9;
+    }
+
+    /* ==========================================
+       1. スタート画面
+       ========================================== */
+    .mode-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .mode-btn {
+      background: var(--bg);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 8px;
+      text-align: center;
+      cursor: pointer;
+      color: var(--text);
+      transition: all 0.15s;
+    }
+
+    .mode-btn.selected {
+      background: var(--primary-light);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .mode-btn-title {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 800;
+    }
+
+    .mode-btn-sub {
+      display: block;
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-top: 2px;
+      font-weight: 600;
+    }
+
+    .mode-btn.selected .mode-btn-sub {
+      color: #1d4ed8;
+    }
+
+    .random-btn {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 13px 16px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 3px 8px rgba(37, 99, 235, 0.25);
+    }
+
+    .random-btn:active {
+      transform: scale(0.98);
+    }
+
+    .pathway-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .pathway-item {
+      background: var(--card);
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 12px;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      transition: border-color 0.15s, transform 0.1s;
+      width: 100%;
+    }
+
+    .pathway-item:hover {
+      border-color: var(--primary);
+    }
+
+    .pathway-item:active {
+      transform: scale(0.99);
+      background: var(--primary-light);
+    }
+
+    .pathway-left {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .pathway-top-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 3px;
+    }
+
+    .pathway-id {
+      font-size: 0.7rem;
+      font-weight: 800;
+      background: #e2e8f0;
+      color: #334155;
+      padding: 1px 6px;
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+
+    .pathway-name {
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .pathway-func {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .pathway-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      flex-shrink: 0;
+      gap: 2px;
+    }
+
+    .mini-rank {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 900;
+    }
+
+    .rank-S { background: #fef3c7; color: #b45309; border: 1px solid #fcd34d; }
+    .rank-A { background: #dbeafe; color: #1d4ed8; border: 1px solid #93c5fd; }
+    .rank-B { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+    .rank-none { background: #f1f5f9; color: #94a3b8; font-size: 0.7rem; width: auto; padding: 0 7px; }
+
+    .mini-time {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ==========================================
+       2. プレイ画面
+       ========================================== */
+    .play-header-card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 12px 14px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+
+    .status-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      font-weight: 800;
+      padding-bottom: 8px;
+      margin-bottom: 8px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .timer-text {
+      color: var(--primary);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .miss-text {
+      color: var(--danger);
+    }
+
+    .play-pathway-title {
+      font-size: 1.02rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .func-badge {
+      display: inline-block;
+      background: var(--primary-light);
+      color: var(--primary);
+      border: 1px solid var(--primary-border);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    .guide-text {
+      font-size: 0.75rem;
+      color: var(--muted);
+      background: #f1f5f9;
+      padding: 8px 10px;
+      border-radius: 8px;
+      line-height: 1.45;
+    }
+
+    /* 組み立てスロット */
+    .slots-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .slot-arrow {
+      text-align: center;
+      color: #94a3b8;
+      font-size: 0.8rem;
+      font-weight: 900;
+      line-height: 1;
+      user-select: none;
+    }
+
+    .slot-row {
+      display: flex;
+      align-items: stretch;
+      gap: 8px;
+    }
+
+    .slot-box {
+      flex: 1;
+      min-height: 46px;
+      background: #f8fafc;
+      border: 2px dashed var(--border);
+      border-radius: 10px;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-align: left;
+    }
+
+    .slot-box.filled {
+      background: var(--card);
+      border: 2px solid var(--primary);
+      box-shadow: 0 1px 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .slot-box.filled:active {
+      transform: scale(0.99);
+    }
+
+    .slot-num {
+      font-size: 0.7rem;
+      font-weight: 900;
+      color: var(--muted);
+      background: #e2e8f0;
+      padding: 2px 6px;
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+
+    .slot-box.filled .slot-num {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .slot-label {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: #94a3b8;
+      line-height: 1.3;
+    }
+
+    .slot-box.filled .slot-label {
+      color: var(--text);
+    }
+
+    /* 交差トグルボタン */
+    .cross-btn {
+      width: 72px;
+      flex-shrink: 0;
+      border-radius: 10px;
+      border: 2px solid var(--border);
+      background: var(--card);
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.15;
+      transition: all 0.15s;
+      padding: 4px;
+    }
+
+    .cross-btn.active {
+      background: var(--cross-light);
+      border-color: var(--cross);
+      color: var(--cross);
+      box-shadow: 0 1px 4px rgba(217, 119, 6, 0.25);
+    }
+
+    .cross-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* アラート・揺れ演出 */
+    .feedback-banner {
+      display: none;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .feedback-banner.error {
+      display: block;
+      background: var(--danger-light);
+      color: var(--danger);
+      border: 1px solid #fca5a5;
+    }
+
+    .feedback-banner.success {
+      display: block;
+      background: var(--success-light);
+      color: var(--success);
+      border: 1px solid #86efac;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-7px); }
+      40% { transform: translateX(7px); }
+      60% { transform: translateX(-5px); }
+      80% { transform: translateX(5px); }
+    }
+
+    .shake {
+      animation: shake 0.38s ease-in-out;
+    }
+
+    /* 選択肢カードエリア */
+    .choices-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .reset-link-btn {
+      background: #f1f5f9;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .reset-link-btn:active {
+      background: #e2e8f0;
+    }
+
+    .choices-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .choice-card {
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 11px 8px;
+      min-height: 54px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      line-height: 1.3;
+      transition: all 0.15s;
+      word-break: break-word;
+    }
+
+    .choice-card:active:not(:disabled) {
+      transform: scale(0.97);
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .choice-card:disabled {
+      background: #f1f5f9;
+      border-color: #e2e8f0;
+      color: #94a3b8;
+      opacity: 0.45;
+      cursor: default;
+    }
+
+    .play-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    /* ==========================================
+       3. リザルト画面
+       ========================================== */
+    .result-hero {
+      text-align: center;
+      padding: 18px 16px;
+      background: var(--card);
+      border-radius: 14px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05);
+    }
+
+    .new-record-badge {
+      display: inline-block;
+      background: var(--cross-light);
+      color: var(--cross);
+      border: 1px solid var(--cross-border);
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 2px 10px;
+      border-radius: 20px;
+      margin-bottom: 6px;
+    }
+
+    .rank-big {
+      font-size: 3rem;
+      font-weight: 900;
+      line-height: 1.05;
+      margin: 4px 0;
+    }
+
+    .rank-big.S { color: #d97706; }
+    .rank-big.A { color: #2563eb; }
+    .rank-big.B { color: #16a34a; }
+
+    .result-comment {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-top: 6px;
+    }
+
+    .result-stats {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid #f1f5f9;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .result-stats strong {
+      display: block;
+      font-size: 1.05rem;
+      color: var(--text);
+      margin-top: 2px;
+    }
+
+    /* 解説ステップ表示 */
+    .review-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .review-step-item {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 9px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .review-step-item.is-cross {
+      background: var(--cross-light);
+      border-color: var(--cross-border);
+    }
+
+    .review-step-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.86rem;
+      font-weight: 800;
+    }
+
+    .review-step-num {
+      font-size: 0.7rem;
+      background: var(--primary);
+      color: #fff;
+      padding: 1px 6px;
+      border-radius: 5px;
+      flex-shrink: 0;
+    }
+
+    .cross-detail-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: #b45309;
+      background: #ffffff;
+      border: 1px solid var(--cross-border);
+      padding: 2px 8px;
+      border-radius: 6px;
+      align-self: flex-start;
+      margin-left: 34px;
+    }
+
+    /* OT臨床ポイント */
+    .clinical-card {
+      background: #eff6ff;
+      border: 2px solid var(--primary-border);
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .clinical-title {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin: 0 0 6px 0;
+    }
+
+    .clinical-text {
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: #1e3a8a;
+      margin: 0;
+      line-height: 1.55;
+    }
+
+    .result-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .result-sub-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 共通ヘッダー -->
+    <header>
+      <div class="header-title-wrap">
+        <h1>神経伝導路 パズル</h1>
+        <span class="header-sub">OT 1年次 基礎解剖・神経学（全14経路）</span>
+      </div>
+      <button id="soundToggle" class="sound-btn" type="button">🔊 音 ON</button>
+    </header>
+
+    <!-- ==========================================
+         1. スタート画面
+         ========================================== -->
+    <section id="startScreen" class="screen active">
+      <div class="section-card">
+        <p class="section-title">1. 難易度を選ぶ</p>
+        <div class="mode-grid">
+          <button id="modeEasyBtn" class="mode-btn selected" type="button" data-diff="easy">
+            <span class="mode-btn-title">初級（ダミーなし）</span>
+            <span class="mode-btn-sub">5枚を順番に並べる</span>
+          </button>
+          <button id="modeHardBtn" class="mode-btn" type="button" data-diff="hard">
+            <span class="mode-btn-title">上級（ダミーあり）</span>
+            <span class="mode-btn-sub">8枚から正しい5枚を選ぶ</span>
+          </button>
+        </div>
+      </div>
+
+      <button id="randomBtn" class="random-btn" type="button">
+        <span>🎲 ランダムで1問挑戦する</span>
+      </button>
+
+      <div class="section-card" style="padding: 12px;">
+        <p class="section-title">
+          <span>2. 伝導路を選んでスタート</span>
+          <span id="clearProgress" style="color: var(--primary);">0 / 14 クリア</span>
+        </p>
+        <div id="pathwayList" class="pathway-list"></div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         2. プレイ画面
+         ========================================== -->
+    <section id="playScreen" class="screen">
+      <div class="play-header-card">
+        <div class="status-row">
+          <span class="timer-text">⏱ <span id="timer">0.0</span>秒</span>
+          <span id="playDiffLabel" style="font-size:0.75rem; color:var(--muted);">初級</span>
+          <span class="miss-text">ミス <span id="missCount">0</span>回</span>
+        </div>
+        <div id="playTitle" class="play-pathway-title"></div>
+        <span id="playFunc" class="func-badge"></span>
+      </div>
+
+      <div class="guide-text">
+        部位を順番にタップして並べ、交差する箇所には<strong>「✖ 交差」をON</strong>にして「完成！」を押そう（交差しない経路はOFFのまま）。
+      </div>
+
+      <!-- 組み立てエリア（Step1〜Step5） -->
+      <div id="slotsWrap" class="slots-wrap"></div>
+
+      <!-- 正解・不正解フィードバック -->
+      <div id="feedbackBanner" class="feedback-banner"></div>
+
+      <!-- 選択肢カードエリア -->
+      <div class="section-card" style="padding: 12px;">
+        <div class="choices-header">
+          <span class="section-title" style="margin:0;">選択肢カード（タップで配置）</span>
+          <button id="resetSlotsBtn" class="reset-link-btn" type="button">↺ リセット</button>
+        </div>
+        <div id="choicesGrid" class="choices-grid"></div>
+      </div>
+
+      <!-- 下部アクション -->
+      <div class="play-actions">
+        <button id="submitBtn" class="primary-btn" type="button" disabled>完成！（あと5つ選択）</button>
+        <button id="quitBtn" class="secondary-btn" type="button">タイトルに戻る</button>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         3. リザルト画面
+         ========================================== -->
+    <section id="resultScreen" class="screen">
+      <div class="result-hero">
+        <div id="newRecordBadge" class="new-record-badge" style="display:none;">🎉 ベストタイム更新！</div>
+        <div style="font-size:0.8rem; font-weight:700; color:var(--muted);">クリアランク</div>
+        <div id="resultRank" class="rank-big S">S</div>
+        <div id="resultComment" class="result-comment"></div>
+        <div class="result-stats">
+          <div>クリアタイム<strong id="resultTime">0.0秒</strong></div>
+          <div>ミス回数<strong id="resultMiss">0回</strong></div>
+          <div>難易度<strong id="resultDiff">初級</strong></div>
+        </div>
+      </div>
+
+      <!-- 完成した伝導路の解説 -->
+      <div class="section-card">
+        <p class="section-title">✅ 完成した伝導路の解説</p>
+        <div id="reviewPathwayName" style="font-size:0.95rem; font-weight:800; margin-bottom:8px;"></div>
+        <div id="reviewSteps" class="review-steps"></div>
+      </div>
+
+      <!-- OT臨床ポイント -->
+      <div class="clinical-card">
+        <p class="clinical-title">🏥 OT臨床ポイント</p>
+        <p id="clinicalText" class="clinical-text"></p>
+      </div>
+
+      <!-- リザルト下部ボタン -->
+      <div class="result-actions">
+        <button id="retryBtn" class="primary-btn" type="button">もう一度チャレンジ（リベンジ）</button>
+        <div class="result-sub-actions">
+          <button id="nextBtn" class="secondary-btn" type="button">次の伝導路へ ➡</button>
+          <button id="backListBtn" class="secondary-btn" type="button">一覧に戻る</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    /**
+     * =========================================================================
+     * 全14伝導路 マスターデータ
+     * =========================================================================
+     */
+    const PATHWAYS = [
+      {
+        id: "P01",
+        name: "外側皮質脊髄路 (錐体路の主経路)",
+        func: "四肢遠位部の随意運動",
+        steps: ["大脳皮質運動野", "内包後脚", "中脳大脳脚", "延髄の錐体", "脊髄前角運動細胞"],
+        crossIndices: [3],
+        crossDetails: { 3: "ここで交差（錐体交叉）" },
+        dummies: ["内包前脚", "内側毛帯", "視床"],
+        clinical: "脳卒中で内包後脚が損傷すると、この経路が断たれて対側の重度な片麻痺が生じます。"
+      },
+      {
+        id: "P02",
+        name: "前皮質脊髄路 (錐体路の非交叉路)",
+        func: "体幹・近位筋の随意運動",
+        steps: ["大脳皮質運動野", "内包後脚", "中脳・橋・延髄を同側下行", "脊髄白交連", "脊髄前角運動細胞"],
+        crossIndices: [3],
+        crossDetails: { 3: "ここで交差" },
+        dummies: ["脊髄後索", "延髄錐体交叉", "小脳"],
+        clinical: "体幹や近位筋のコントロールに関わるため、麻痺側でも姿勢保持がある程度保たれる理由の一つとなります。"
+      },
+      {
+        id: "P03",
+        name: "皮質核路 (皮質延髄路)",
+        func: "顔面・咀嚼・舌・咽頭筋の随意運動",
+        steps: ["大脳皮質運動野（下部）", "内包膝部", "中脳大脳脚", "脳幹（多くは両側性に支配）", "脳神経運動核"],
+        crossIndices: [],
+        crossDetails: {},
+        dummies: ["内包後脚", "脊髄前角", "脊髄白交連"],
+        clinical: "嚥下や構音に関わります。多くが両側支配のため、片側の脳損傷では嚥下障害が比較的軽度で済むことがあります（偽性球麻痺）。"
+      },
+      {
+        id: "P04",
+        name: "外側脊髄視床路",
+        func: "温覚・痛覚",
+        steps: ["脊髄後根神経節（DRG）", "脊髄後角（膠様質など）", "脊髄白交連", "脊髄側索 → 脊髄毛帯", "視床(VPL) → 一次体性感覚野"],
+        crossIndices: [2],
+        crossDetails: { 2: "ここで交差" },
+        dummies: ["延髄の毛帯交叉", "脊髄後索", "内側毛帯"],
+        clinical: "この経路が脊髄内で交差するため、脊髄半側損傷（ブラウン・セカール症候群）では損傷部以下の「対側」の温痛覚が消失します。"
+      },
+      {
+        id: "P05",
+        name: "前脊髄視床路",
+        func: "粗大触覚・圧覚",
+        steps: ["脊髄後根神経節（DRG）", "脊髄後角", "脊髄白交連", "脊髄前索 → 内側毛帯", "視床(VPL) → 一次体性感覚野"],
+        crossIndices: [2],
+        crossDetails: { 2: "ここで交差" },
+        dummies: ["脊髄後索", "延髄の毛帯交叉", "外側毛帯"],
+        clinical: "温痛覚（外側）と同じく脊髄で交差します。精細な触覚とは別の経路である点に注意が必要です。"
+      },
+      {
+        id: "P06",
+        name: "後索―内側毛帯路",
+        func: "意識にのぼる深部感覚、精細触覚",
+        steps: ["脊髄後根神経節（DRG）", "脊髄後索（薄束・楔状束）", "延髄後索核（薄束核・楔状束核）", "内弓状線維", "内側毛帯 → 視床(VPL) → 皮質"],
+        crossIndices: [3],
+        crossDetails: { 3: "ここで交差（毛帯交叉）" },
+        dummies: ["脊髄白交連", "外側毛帯", "上小脳脚"],
+        clinical: "延髄で交差するため、ブラウン・セカール症候群では損傷部以下の「同側」の深部感覚が消失します。"
+      },
+      {
+        id: "P07",
+        name: "後脊髄小脳路",
+        func: "下半身の無意識的深部感覚",
+        steps: ["脊髄後根神経節（DRG）", "胸髄核（Clarke核）", "脊髄側索後外側部を同側上行", "下小脳脚", "小脳皮質（虫部・中間部）"],
+        crossIndices: [],
+        crossDetails: {},
+        dummies: ["上小脳脚", "内側毛帯", "視床"],
+        clinical: "交差せずに同側を上行します。小脳への深部感覚フィードバックが失われると運動失調が生じます。"
+      },
+      {
+        id: "P08",
+        name: "前脊髄小脳路",
+        func: "無意識的深部感覚・運動指令のFB",
+        steps: ["脊髄後根神経節（DRG）", "脊髄後角基部", "脊髄白交連", "上小脳脚 → 小脳内", "小脳皮質（虫部・中間部）"],
+        crossIndices: [2, 3],
+        crossDetails: { 2: "ここで交差", 3: "再交差" },
+        dummies: ["下小脳脚", "視床", "内包後脚"],
+        clinical: "脊髄で一度交差し、小脳に入る際にもう一度交差するため、結果的に同側の情報を小脳に伝えます。"
+      },
+      {
+        id: "P09",
+        name: "視覚伝導路",
+        func: "視覚情報",
+        steps: ["網膜", "視神経", "視交叉", "視索 → 外側膝状体（視床）", "視放線 → 一次視覚野"],
+        crossIndices: [2],
+        crossDetails: { 2: "鼻側線維のみここで交差" },
+        dummies: ["内側膝状体", "下丘", "上小脳脚"],
+        clinical: "視交叉より後ろ（視索や後頭葉）が損傷すると、対側の視野が欠損する「同名半盲」が生じます。"
+      },
+      {
+        id: "P10",
+        name: "聴覚伝導路",
+        func: "聴覚情報",
+        steps: ["内耳コルチ器", "蝸牛神経核（延髄・橋）", "台形体", "外側毛帯 → 下丘 → 内側膝状体", "聴放線 → 一次聴覚野"],
+        crossIndices: [2],
+        crossDetails: { 2: "ここで多くは交差" },
+        dummies: ["外側膝状体", "上丘", "内側毛帯"],
+        clinical: "聴覚は両側性に大脳に送られるため、片側の一次聴覚野が損傷しても完全な片耳の失聴にはなりません。"
+      },
+      {
+        id: "P11",
+        name: "味覚伝導路",
+        func: "味覚情報",
+        steps: ["舌・咽頭の味蕾", "顔面・舌咽・迷走神経節", "延髄の孤束核", "中心被蓋路近傍を上行（同側）", "視床(VPM) → 島皮質・弁蓋部"],
+        crossIndices: [],
+        crossDetails: {},
+        dummies: ["視床(VPL)", "外側毛帯", "視交叉"],
+        clinical: "味覚は他の多くの感覚と異なり、交差せずに同側の脳へ向かうのが大きな特徴です。"
+      },
+      {
+        id: "P12",
+        name: "赤核脊髄路",
+        func: "屈筋筋緊張亢進・協調運動",
+        steps: ["中脳 赤核", "腹側被蓋交叉", "脳幹被蓋を下行", "脊髄側索を下行", "脊髄前角（屈筋支配）"],
+        crossIndices: [1],
+        crossDetails: { 1: "ここで交差" },
+        dummies: ["錐体交叉", "内側毛帯", "延髄"],
+        clinical: "錐体路を補完して運動を制御します。中脳以下での除脳硬直のメカニズムに関与します。"
+      },
+      {
+        id: "P13",
+        name: "前庭脊髄路",
+        func: "抗重力筋（伸筋）筋緊張・平衡反射",
+        steps: ["前庭神経核（延髄・橋）", "交叉せず下行（外側路）", "脊髄前索を下行", "脊髄前角（伸筋支配）", "骨格筋へ投射"],
+        crossIndices: [],
+        crossDetails: {},
+        dummies: ["延髄の錐体", "内包後脚", "視床"],
+        clinical: "バランスを崩した際に、とっさに姿勢を立て直すための伸筋（抗重力筋）の緊張を高めます。"
+      },
+      {
+        id: "P14",
+        name: "Papez回路",
+        func: "エピソード記憶の固定・情動発現",
+        steps: ["海馬", "脳弓", "乳頭体（視床下部）", "視床前核", "帯状回 → 海馬傍回 → 海馬"],
+        crossIndices: [],
+        crossDetails: {},
+        dummies: ["外側膝状体", "内包", "扁桃体"],
+        clinical: "記憶を司る重要なループ構造です。アルツハイマー型認知症などで海馬が萎縮すると、新しいことが覚えられなくなります。"
+      }
+    ];
+
+    /**
+     * =========================================================================
+     * 状態管理 & ストレージ
+     * =========================================================================
+     */
+    const STORAGE_KEY = "ot_neural_pathway_records_v1";
+    const RANK_WEIGHT = { S: 3, A: 2, B: 1 };
+
+    let currentDiff = "easy"; // "easy" | "hard"
+    let soundOn = true;
+    let currentPathwayIndex = 0;
+
+    // プレイ中状態
+    let choices = []; // { id, text, used }
+    let slots = [null, null, null, null, null]; // choiceId or null
+    let crossFlags = [false, false, false, false, false];
+    let timerInterval = null;
+    let startTime = 0;
+    let elapsedSec = 0;
+    let missCount = 0;
+    let isLocked = false;
+
+    // Web Audio API 効果音
+    let audioCtx = null;
+    function playSound(type) {
+      if (!soundOn) return;
+      try {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === "suspended") {
+          audioCtx.resume();
+        }
+        const now = audioCtx.currentTime;
+
+        const playTone = (freq, dur, wave, vol, delay = 0) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = wave;
+          osc.frequency.setValueAtTime(freq, now + delay);
+          gain.gain.setValueAtTime(vol, now + delay);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + delay + dur);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now + delay);
+          osc.stop(now + delay + dur);
+        };
+
+        if (type === "tap") {
+          playTone(540, 0.06, "sine", 0.07);
+        } else if (type === "cross") {
+          playTone(720, 0.08, "triangle", 0.08);
+        } else if (type === "wrong") {
+          playTone(210, 0.18, "sawtooth", 0.1, 0);
+          playTone(165, 0.22, "sawtooth", 0.1, 0.1);
+        } else if (type === "clear") {
+          playTone(523.25, 0.12, "sine", 0.12, 0);
+          playTone(659.25, 0.12, "sine", 0.12, 0.09);
+          playTone(783.99, 0.12, "sine", 0.12, 0.18);
+          playTone(1046.5, 0.35, "sine", 0.14, 0.27);
+        }
+      } catch (e) {}
+    }
+
+    function loadRecords() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function saveRecord(pathwayId, diff, sec, rank) {
+      const records = loadRecords();
+      const key = `${pathwayId}_${diff}`;
+      const prev = records[key];
+      let isNewBest = false;
+
+      if (!prev) {
+        records[key] = { bestTime: sec, bestRank: rank };
+        isNewBest = true;
+      } else {
+        if (sec < prev.bestTime) {
+          prev.bestTime = sec;
+          isNewBest = true;
+        }
+        if ((RANK_WEIGHT[rank] || 0) > (RANK_WEIGHT[prev.bestRank] || 0)) {
+          prev.bestRank = rank;
+        }
+      }
+
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+      } catch (e) {}
+      return isNewBest;
+    }
+
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    /**
+     * =========================================================================
+     * 画面切り替え & スタート画面
+     * =========================================================================
+     */
+    function showScreen(id) {
+      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+
+    function renderStartScreen() {
+      const records = loadRecords();
+      const listEl = document.getElementById("pathwayList");
+      listEl.innerHTML = "";
+
+      let clearedCount = 0;
+
+      PATHWAYS.forEach((p, idx) => {
+        const rec = records[`${p.id}_${currentDiff}`];
+        if (rec) clearedCount++;
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "pathway-item";
+
+        const rankHtml = rec
+          ? `<span class="mini-rank rank-${rec.bestRank}">${rec.bestRank}</span><span class="mini-time">${rec.bestTime.toFixed(1)}秒</span>`
+          : `<span class="mini-rank rank-none">未挑戦</span>`;
+
+        btn.innerHTML = `
+          <div class="pathway-left">
+            <div class="pathway-top-row">
+              <span class="pathway-id">${p.id}</span>
+              <span class="pathway-name">${p.name}</span>
+            </div>
+            <div class="pathway-func">${p.func}</div>
+          </div>
+          <div class="pathway-right">${rankHtml}</div>
+        `;
+
+        btn.onclick = () => {
+          playSound("tap");
+          startPathway(idx);
+        };
+        listEl.appendChild(btn);
+      });
+
+      document.getElementById("clearProgress").textContent = `${clearedCount} / ${PATHWAYS.length} クリア`;
+    }
+
+    /**
+     * =========================================================================
+     * プレイ画面ロジック
+     * =========================================================================
+     */
+    function startPathway(index) {
+      currentPathwayIndex = index;
+      const p = PATHWAYS[index];
+
+      // 選択肢生成
+      const rawTexts = currentDiff === "hard"
+        ? [...p.steps, ...p.dummies]
+        : [...p.steps];
+
+      choices = shuffle(rawTexts).map((text, i) => ({
+        id: i,
+        text,
+        used: false
+      }));
+
+      slots = [null, null, null, null, null];
+      crossFlags = [false, false, false, false, false];
+      missCount = 0;
+      isLocked = false;
+
+      document.getElementById("playTitle").textContent = `${p.id} ${p.name}`;
+      document.getElementById("playFunc").textContent = `機能：${p.func}`;
+      document.getElementById("playDiffLabel").textContent = currentDiff === "hard" ? "上級（ダミーあり）" : "初級（ダミーなし）";
+      document.getElementById("missCount").textContent = "0";
+      hideFeedback();
+
+      renderPlayBoard();
+      showScreen("playScreen");
+
+      // タイマー開始
+      clearInterval(timerInterval);
+      startTime = performance.now();
+      elapsedSec = 0;
+      document.getElementById("timer").textContent = "0.0";
+      timerInterval = setInterval(() => {
+        elapsedSec = (performance.now() - startTime) / 1000;
+        document.getElementById("timer").textContent = elapsedSec.toFixed(1);
+      }, 100);
+    }
+
+    function renderPlayBoard() {
+      // 1. スロット描画
+      const slotsWrap = document.getElementById("slotsWrap");
+      slotsWrap.innerHTML = "";
+
+      for (let i = 0; i < 5; i++) {
+        if (i > 0) {
+          const arrow = document.createElement("div");
+          arrow.className = "slot-arrow";
+          arrow.textContent = "↓";
+          slotsWrap.appendChild(arrow);
+        }
+
+        const row = document.createElement("div");
+        row.className = "slot-row";
+
+        const choiceId = slots[i];
+        const choiceObj = choiceId !== null ? choices.find(c => c.id === choiceId) : null;
+
+        // スロット本体
+        const slotBtn = document.createElement("button");
+        slotBtn.type = "button";
+        slotBtn.className = "slot-box" + (choiceObj ? " filled" : "");
+        slotBtn.innerHTML = `
+          <span class="slot-num">Step${i + 1}</span>
+          <span class="slot-label">${choiceObj ? choiceObj.text : "タップして選択..."}</span>
+        `;
+        slotBtn.onclick = () => {
+          if (isLocked || choiceId === null) return;
+          playSound("tap");
+          removeFromSlot(i);
+        };
+
+        // 交差トグルボタン
+        const crossBtn = document.createElement("button");
+        crossBtn.type = "button";
+        crossBtn.className = "cross-btn" + (crossFlags[i] ? " active" : "");
+        crossBtn.innerHTML = crossFlags[i]
+          ? `<span>⚡</span><span>交差ON</span>`
+          : `<span>✖</span><span>交差</span>`;
+        crossBtn.onclick = () => {
+          if (isLocked) return;
+          playSound("cross");
+          crossFlags[i] = !crossFlags[i];
+          renderPlayBoard();
+        };
+
+        row.appendChild(slotBtn);
+        row.appendChild(crossBtn);
+        slotsWrap.appendChild(row);
+      }
+
+      // 2. 選択肢カード描画
+      const choicesGrid = document.getElementById("choicesGrid");
+      choicesGrid.innerHTML = "";
+      choices.forEach(c => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "choice-card";
+        btn.textContent = c.text;
+        btn.disabled = c.used;
+        btn.onclick = () => {
+          if (isLocked || c.used) return;
+          placeChoice(c.id);
+        };
+        choicesGrid.appendChild(btn);
+      });
+
+      // 3. 完成ボタン状態更新
+      const emptyCount = slots.filter(s => s === null).length;
+      const submitBtn = document.getElementById("submitBtn");
+      if (emptyCount === 0) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "完成！答え合わせをする";
+      } else {
+        submitBtn.disabled = true;
+        submitBtn.textContent = `完成！（あと${emptyCount}つ選択）`;
+      }
+    }
+
+    function placeChoice(choiceId) {
+      const emptyIdx = slots.findIndex(s => s === null);
+      if (emptyIdx === -1) return;
+      playSound("tap");
+      slots[emptyIdx] = choiceId;
+      const c = choices.find(item => item.id === choiceId);
+      if (c) c.used = true;
+      hideFeedback();
+      renderPlayBoard();
+    }
+
+    function removeFromSlot(slotIdx) {
+      const choiceId = slots[slotIdx];
+      if (choiceId === null) return;
+      const c = choices.find(item => item.id === choiceId);
+      if (c) c.used = false;
+      slots[slotIdx] = null;
+      hideFeedback();
+      renderPlayBoard();
+    }
+
+    function resetAllSlots() {
+      slots = [null, null, null, null, null];
+      crossFlags = [false, false, false, false, false];
+      choices.forEach(c => (c.used = false));
+      renderPlayBoard();
+    }
+
+    function showFeedback(type, msg) {
+      const banner = document.getElementById("feedbackBanner");
+      banner.className = `feedback-banner ${type}`;
+      banner.textContent = msg;
+    }
+
+    function hideFeedback() {
+      const banner = document.getElementById("feedbackBanner");
+      banner.className = "feedback-banner";
+      banner.textContent = "";
+    }
+
+    /**
+     * 答え合わせ判定
+     */
+    function checkAnswer() {
+      if (isLocked) return;
+      const p = PATHWAYS[currentPathwayIndex];
+
+      // 順番の一致確認
+      let stepsOk = true;
+      for (let i = 0; i < 5; i++) {
+        const c = choices.find(item => item.id === slots[i]);
+        if (!c || c.text !== p.steps[i]) {
+          stepsOk = false;
+          break;
+        }
+      }
+
+      // 交差箇所の完全一致確認
+      let crossOk = true;
+      for (let i = 0; i < 5; i++) {
+        const shouldCross = p.crossIndices.includes(i);
+        if (crossFlags[i] !== shouldCross) {
+          crossOk = false;
+          break;
+        }
+      }
+
+      if (stepsOk && crossOk) {
+        // 正解！
+        isLocked = true;
+        clearInterval(timerInterval);
+        elapsedSec = (performance.now() - startTime) / 1000;
+        playSound("clear");
+        showFeedback("success", "🎉 正解！完璧に伝導路が完成しました！");
+        setTimeout(() => {
+          showResult();
+        }, 650);
+      } else {
+        // 不正解：最初からやり直し
+        isLocked = true;
+        missCount++;
+        document.getElementById("missCount").textContent = String(missCount);
+        playSound("wrong");
+        showFeedback("error", "❌ 不正解！順番または交差箇所が間違っています。最初からやり直そう！");
+
+        const wrap = document.getElementById("slotsWrap");
+        wrap.classList.remove("shake");
+        void wrap.offsetWidth; // リフロー
+        wrap.classList.add("shake");
+
+        setTimeout(() => {
+          resetAllSlots();
+          isLocked = false;
+        }, 700);
+      }
+    }
+
+    /**
+     * =========================================================================
+     * リザルト画面
+     * =========================================================================
+     */
+    function showResult() {
+      const p = PATHWAYS[currentPathwayIndex];
+
+      // ランク判定
+      let rank = "B";
+      let comment = "クリアおめでとう！もう一度挑戦してタイムを縮めよう！";
+
+      if (elapsedSec < 20.0 && missCount === 0) {
+        rank = "S";
+        comment = "神速＆パーフェクト！臨床でも即戦力の理解度です！";
+      } else if (elapsedSec < 35.0) {
+        rank = "A";
+        comment = missCount === 0
+          ? "素晴らしい！ノーミスでしっかり伝導路の流れがつかめています！"
+          : "素晴らしい！ミスを乗り越えて素早くクリアできました！";
+      } else {
+        rank = "B";
+        comment = missCount === 0
+          ? "ノーミスで確実にクリア！次はスピードアップを目指そう！"
+          : "粘り強くクリアできました！解説を確認してリベンジしよう！";
+      }
+
+      const isNewBest = saveRecord(p.id, currentDiff, elapsedSec, rank);
+
+      document.getElementById("newRecordBadge").style.display = isNewBest ? "inline-block" : "none";
+      const rankEl = document.getElementById("resultRank");
+      rankEl.textContent = rank;
+      rankEl.className = `rank-big ${rank}`;
+
+      document.getElementById("resultComment").textContent = comment;
+      document.getElementById("resultTime").textContent = `${elapsedSec.toFixed(1)}秒`;
+      document.getElementById("resultMiss").textContent = `${missCount}回`;
+      document.getElementById("resultDiff").textContent = currentDiff === "hard" ? "上級" : "初級";
+
+      // 完成した伝導路の解説
+      document.getElementById("reviewPathwayName").textContent = `${p.id} ${p.name}（${p.func}）`;
+      const reviewStepsEl = document.getElementById("reviewSteps");
+      reviewStepsEl.innerHTML = "";
+
+      p.steps.forEach((stepText, idx) => {
+        const isCross = p.crossIndices.includes(idx);
+        const item = document.createElement("div");
+        item.className = "review-step-item" + (isCross ? " is-cross" : "");
+
+        const crossBadgeHtml = isCross
+          ? `<div class="cross-detail-badge">⚡ 交差ポイント：${p.crossDetails[idx] || "ここで交差"}</div>`
+          : "";
+
+        item.innerHTML = `
+          <div class="review-step-top">
+            <span class="review-step-num">Step${idx + 1}</span>
+            <span>${stepText}</span>
+          </div>
+          ${crossBadgeHtml}
+        `;
+        reviewStepsEl.appendChild(item);
+      });
+
+      if (p.crossIndices.length === 0) {
+        const noCrossNote = document.createElement("div");
+        noCrossNote.style.cssText = "font-size:0.78rem; color:var(--muted); text-align:center; margin-top:4px; font-weight:700;";
+        noCrossNote.textContent = "※ この経路は交差なし（同側性・両側性）の経路です";
+        reviewStepsEl.appendChild(noCrossNote);
+      }
+
+      // OT臨床ポイント
+      document.getElementById("clinicalText").textContent = p.clinical;
+
+      showScreen("resultScreen");
+    }
+
+    /**
+     * =========================================================================
+     * イベントリスナー登録
+     * =========================================================================
+     */
+    document.getElementById("soundToggle").onclick = (e) => {
+      soundOn = !soundOn;
+      e.target.textContent = soundOn ? "🔊 音 ON" : "🔇 音 OFF";
+      if (soundOn) playSound("tap");
+    };
+
+    document.querySelectorAll(".mode-btn").forEach(btn => {
+      btn.onclick = () => {
+        playSound("tap");
+        currentDiff = btn.dataset.diff;
+        document.querySelectorAll(".mode-btn").forEach(b => b.classList.remove("selected"));
+        btn.classList.add("selected");
+        renderStartScreen();
+      };
+    });
+
+    document.getElementById("randomBtn").onclick = () => {
+      playSound("tap");
+      const randIdx = Math.floor(Math.random() * PATHWAYS.length);
+      startPathway(randIdx);
+    };
+
+    document.getElementById("resetSlotsBtn").onclick = () => {
+      if (isLocked) return;
+      playSound("tap");
+      hideFeedback();
+      resetAllSlots();
+    };
+
+    document.getElementById("submitBtn").onclick = checkAnswer;
+
+    document.getElementById("quitBtn").onclick = () => {
+      clearInterval(timerInterval);
+      playSound("tap");
+      renderStartScreen();
+      showScreen("startScreen");
+    };
+
+    document.getElementById("retryBtn").onclick = () => {
+      playSound("tap");
+      startPathway(currentPathwayIndex);
+    };
+
+    document.getElementById("nextBtn").onclick = () => {
+      playSound("tap");
+      const nextIdx = (currentPathwayIndex + 1) % PATHWAYS.length;
+      startPathway(nextIdx);
+    };
+
+    document.getElementById("backListBtn").onclick = () => {
+      playSound("tap");
+      renderStartScreen();
+      showScreen("startScreen");
+    };
+
+    // 初期表示
+    renderStartScreen();
+  </script>
+</body>
+</html>
