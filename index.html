@@ -3,19 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>神経伝導路 パズル（全14経路）</title>
+  <title>🧠 神経伝導路パズル</title>
   <style>
     :root {
       --primary: #2563eb;
+      --primary-dark: #1d4ed8;
       --primary-light: #eff6ff;
       --primary-border: #bfdbfe;
+
+      --indigo: #4f46e5;
+      --indigo-dark: #4338ca;
+      --indigo-light: #eef2ff;
+      --indigo-border: #c7d2fe;
+
+      --accent: #059669;
+      --accent-light: #ecfdf5;
+      --accent-border: #a7f3d0;
+
+      --gold: #d97706;
+      --gold-dark: #92400e;
+      --gold-bg: #fef3c7;
+      --gold-border: #f59e0b;
+
       --success: #16a34a;
       --success-light: #dcfce7;
+      --success-border: #86efac;
+
       --danger: #dc2626;
       --danger-light: #fee2e2;
-      --cross: #d97706;
-      --cross-light: #fef3c7;
-      --cross-border: #fcd34d;
+      --danger-border: #fca5a5;
+
+      --warning: #d97706;
+      --warning-light: #fef3c7;
+      --warning-border: #fcd34d;
+
       --bg: #f8fafc;
       --card: #ffffff;
       --text: #1e293b;
@@ -38,50 +59,55 @@
     }
 
     .container {
-      max-width: 540px;
+      max-width: 520px;
       margin: 0 auto;
       min-height: 100vh;
-      padding: 16px;
+      padding: 14px 14px 16px;
       display: flex;
       flex-direction: column;
     }
 
-    /* ヘッダー */
+    /* ==========================================
+       ヘッダー
+       ========================================== */
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
+      gap: 8px;
     }
 
     .header-title-wrap {
       display: flex;
       flex-direction: column;
+      min-width: 0;
     }
 
     h1 {
-      font-size: 1.25rem;
-      font-weight: 800;
+      font-size: 1.18rem;
+      font-weight: 900;
       margin: 0;
-      color: var(--primary);
+      color: var(--indigo);
       letter-spacing: -0.02em;
     }
 
     .header-sub {
       font-size: 0.72rem;
       color: var(--muted);
-      font-weight: 600;
+      font-weight: 700;
     }
 
     .sound-btn {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 20px;
-      padding: 6px 12px;
-      font-size: 0.8rem;
+      padding: 7px 12px;
+      font-size: 0.78rem;
       font-weight: 700;
       cursor: pointer;
       color: var(--text);
+      flex-shrink: 0;
       transition: background-color 0.15s;
     }
 
@@ -89,11 +115,13 @@
       background: #e2e8f0;
     }
 
-    /* 画面切り替え */
+    /* ==========================================
+       画面切替・共通UI
+       ========================================== */
     .screen {
       display: none;
       flex-direction: column;
-      gap: 14px;
+      gap: 13px;
       flex: 1;
     }
 
@@ -101,7 +129,6 @@
       display: flex;
     }
 
-    /* 共通カード・ボタン */
     .section-card {
       background: var(--card);
       border-radius: 14px;
@@ -111,7 +138,7 @@
     }
 
     .section-title {
-      font-size: 0.82rem;
+      font-size: 0.84rem;
       font-weight: 800;
       color: var(--muted);
       margin: 0 0 10px 0;
@@ -121,16 +148,16 @@
     }
 
     .primary-btn {
-      background: var(--primary);
+      background: linear-gradient(135deg, var(--primary), var(--indigo));
       color: #ffffff;
       border: none;
       border-radius: 12px;
       padding: 14px;
-      font-size: 1rem;
+      font-size: 0.96rem;
       font-weight: 800;
       cursor: pointer;
       width: 100%;
-      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
+      box-shadow: 0 2px 8px rgba(79, 70, 229, 0.28);
       transition: transform 0.1s, opacity 0.15s;
     }
 
@@ -145,17 +172,33 @@
       opacity: 0.7;
     }
 
+    .weak-btn {
+      background: var(--warning-light);
+      color: var(--warning);
+      border: 2px solid var(--warning);
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 0.9rem;
+      font-weight: 800;
+      cursor: pointer;
+      width: 100%;
+      transition: transform 0.1s;
+    }
+
+    .weak-btn:active {
+      transform: scale(0.98);
+    }
+
     .secondary-btn {
       background: var(--card);
       color: var(--text);
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 12px;
-      font-size: 0.9rem;
+      padding: 11px;
+      font-size: 0.88rem;
       font-weight: 700;
       cursor: pointer;
       width: 100%;
-      transition: background-color 0.15s;
     }
 
     .secondary-btn:active {
@@ -163,246 +206,256 @@
     }
 
     /* ==========================================
-       1. スタート画面
+       1段3等分タブナビゲーション
        ========================================== */
-    .mode-grid {
+    .game-tabs {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+      background: #e2e8f0;
+      padding: 4px;
+      border-radius: 14px;
     }
 
-    .mode-btn {
-      background: var(--bg);
-      border: 2px solid var(--border);
-      border-radius: 10px;
-      padding: 10px 8px;
-      text-align: center;
-      cursor: pointer;
-      color: var(--text);
-      transition: all 0.15s;
-    }
-
-    .mode-btn.selected {
-      background: var(--primary-light);
-      border-color: var(--primary);
-      color: var(--primary);
-    }
-
-    .mode-btn-title {
-      display: block;
-      font-size: 0.9rem;
-      font-weight: 800;
-    }
-
-    .mode-btn-sub {
-      display: block;
-      font-size: 0.7rem;
-      color: var(--muted);
-      margin-top: 2px;
-      font-weight: 600;
-    }
-
-    .mode-btn.selected .mode-btn-sub {
-      color: #1d4ed8;
-    }
-
-    .random-btn {
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      color: #fff;
+    .game-tab-btn {
+      background: transparent;
       border: none;
-      border-radius: 12px;
-      padding: 13px 16px;
-      font-size: 0.95rem;
+      border-radius: 10px;
+      padding: 9px 4px;
+      font-size: 0.78rem;
       font-weight: 800;
+      color: var(--muted);
       cursor: pointer;
-      width: 100%;
+      transition: all 0.18s;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      gap: 8px;
-      box-shadow: 0 3px 8px rgba(37, 99, 235, 0.25);
+      gap: 2px;
     }
 
-    .random-btn:active {
-      transform: scale(0.98);
+    .game-tab-btn.active {
+      background: var(--card);
+      color: var(--indigo);
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
     }
 
-    .pathway-list {
+    .game-tab-sub {
+      font-size: 0.62rem;
+      font-weight: 600;
+      opacity: 0.85;
+    }
+
+    .tab-panel {
+      display: none;
+      flex-direction: column;
+      gap: 13px;
+    }
+
+    .tab-panel.active {
+      display: flex;
+    }
+
+    /* コース・ルート選択カード */
+    .mode-list {
       display: flex;
       flex-direction: column;
       gap: 8px;
     }
 
-    .pathway-item {
-      background: var(--card);
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 12px;
-      text-align: left;
+    .select-btn {
+      background: var(--bg);
+      border: 2px solid var(--border);
+      border-radius: 11px;
+      padding: 11px 12px;
+      font-size: 0.84rem;
+      font-weight: 800;
+      color: var(--text);
       cursor: pointer;
+      text-align: left;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 10px;
-      transition: border-color 0.15s, transform 0.1s;
-      width: 100%;
+      gap: 8px;
+      transition: all 0.15s;
     }
 
-    .pathway-item:hover {
-      border-color: var(--primary);
+    .select-btn.selected {
+      background: var(--indigo-light);
+      border-color: var(--indigo);
+      color: var(--indigo-dark);
     }
 
-    .pathway-item:active {
-      transform: scale(0.99);
-      background: var(--primary-light);
-    }
-
-    .pathway-left {
-      flex: 1;
+    .select-btn-left {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
       min-width: 0;
     }
 
-    .pathway-top-row {
+    .select-btn-top {
       display: flex;
       align-items: center;
       gap: 6px;
-      margin-bottom: 3px;
+      flex-wrap: wrap;
     }
 
-    .pathway-id {
-      font-size: 0.7rem;
-      font-weight: 800;
-      background: #e2e8f0;
-      color: #334155;
+    .level-pill {
+      font-size: 0.65rem;
+      font-weight: 900;
       padding: 1px 6px;
       border-radius: 6px;
       flex-shrink: 0;
     }
 
-    .pathway-name {
-      font-size: 0.92rem;
-      font-weight: 800;
-      color: var(--text);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    .level-pill.basic {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      border: 1px solid var(--primary-border);
     }
 
-    .pathway-func {
-      font-size: 0.75rem;
+    .level-pill.adv {
+      background: var(--indigo-light);
+      color: var(--indigo-dark);
+      border: 1px solid var(--indigo-border);
+    }
+
+    .select-btn .sub {
+      font-size: 0.7rem;
+      font-weight: 600;
       color: var(--muted);
-      font-weight: 500;
     }
 
-    .pathway-right {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
+    .select-btn.selected .sub {
+      color: var(--indigo);
+    }
+
+    .record-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.71rem;
+      font-weight: 800;
+      padding: 3px 7px;
+      border-radius: 9px;
+      background: #f1f5f9;
+      color: var(--muted);
       flex-shrink: 0;
-      gap: 2px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .record-pill.has-record {
+      background: #ffffff;
+      border: 1px solid var(--indigo-border);
+      color: var(--text);
     }
 
     .mini-rank {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 26px;
-      height: 26px;
-      border-radius: 8px;
-      font-size: 0.85rem;
+      width: 19px;
+      height: 19px;
+      border-radius: 5px;
+      font-size: 0.72rem;
       font-weight: 900;
     }
 
-    .rank-S { background: #fef3c7; color: #b45309; border: 1px solid #fcd34d; }
-    .rank-A { background: #dbeafe; color: #1d4ed8; border: 1px solid #93c5fd; }
-    .rank-B { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
-    .rank-none { background: #f1f5f9; color: #94a3b8; font-size: 0.7rem; width: auto; padding: 0 7px; }
+    .rank-S { background: var(--gold-bg); color: var(--gold); border: 1px solid var(--gold-border); }
+    .rank-A { background: var(--primary-light); color: var(--primary); border: 1px solid var(--primary-border); }
+    .rank-B { background: var(--accent-light); color: var(--accent); border: 1px solid var(--accent-border); }
 
-    .mini-time {
-      font-size: 0.7rem;
+    .intro-box {
+      background: var(--indigo-light);
+      border: 1px solid var(--indigo-border);
+      border-radius: 12px;
+      padding: 11px 13px;
+      font-size: 0.8rem;
+      color: #312e81;
+      line-height: 1.55;
+    }
+
+    .best-record {
+      font-size: 0.78rem;
       font-weight: 700;
       color: var(--muted);
-      font-variant-numeric: tabular-nums;
+      text-align: center;
     }
 
     /* ==========================================
-       2. プレイ画面
+       共通ステータスバー & アニメーション
        ========================================== */
-    .play-header-card {
-      background: var(--card);
-      border-radius: 12px;
-      padding: 12px 14px;
-      border: 1px solid #e2e8f0;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-    }
-
-    .status-row {
+    .status-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.85rem;
+      background: var(--card);
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 0.84rem;
       font-weight: 800;
-      padding-bottom: 8px;
-      margin-bottom: 8px;
-      border-bottom: 1px solid #f1f5f9;
-    }
-
-    .timer-text {
-      color: var(--primary);
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
       font-variant-numeric: tabular-nums;
     }
 
-    .miss-text {
-      color: var(--danger);
+    .combo-badge { color: var(--warning); }
+    .miss-badge { color: var(--danger); }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
     }
 
-    .play-pathway-title {
-      font-size: 1.02rem;
-      font-weight: 800;
-      color: var(--text);
-      margin-bottom: 4px;
+    .shake {
+      animation: shake 0.36s ease-in-out;
     }
 
-    .func-badge {
-      display: inline-block;
-      background: var(--primary-light);
-      color: var(--primary);
-      border: 1px solid var(--primary-border);
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 6px;
+    /* ==========================================
+       タブ①：伝導路パズル プレイ画面
+       ========================================== */
+    .route-banner {
+      background: linear-gradient(135deg, var(--primary), var(--indigo));
+      color: #ffffff;
+      border-radius: 13px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .route-banner-title {
+      font-size: 0.96rem;
+      font-weight: 900;
+    }
+
+    .route-banner-sub {
+      font-size: 0.74rem;
+      opacity: 0.92;
+      font-weight: 600;
     }
 
     .guide-text {
       font-size: 0.75rem;
       color: var(--muted);
       background: #f1f5f9;
-      padding: 8px 10px;
-      border-radius: 8px;
+      padding: 8px 11px;
+      border-radius: 10px;
       line-height: 1.45;
     }
 
-    /* 組み立てスロット */
     .slots-wrap {
       display: flex;
       flex-direction: column;
-      gap: 4px;
-    }
-
-    .slot-arrow {
-      text-align: center;
-      color: #94a3b8;
-      font-size: 0.8rem;
-      font-weight: 900;
-      line-height: 1;
-      user-select: none;
+      gap: 6px;
     }
 
     .slot-row {
       display: flex;
       align-items: stretch;
-      gap: 8px;
+      gap: 7px;
     }
 
     .slot-box {
@@ -411,60 +464,58 @@
       background: #f8fafc;
       border: 2px dashed var(--border);
       border-radius: 10px;
-      padding: 8px 10px;
+      padding: 7px 10px;
       display: flex;
       align-items: center;
       gap: 8px;
       cursor: pointer;
       transition: all 0.15s;
       text-align: left;
+      min-width: 0;
     }
 
     .slot-box.filled {
       background: var(--card);
-      border: 2px solid var(--primary);
-      box-shadow: 0 1px 3px rgba(37, 99, 235, 0.12);
-    }
-
-    .slot-box.filled:active {
-      transform: scale(0.99);
+      border: 2px solid var(--indigo);
+      box-shadow: 0 1px 3px rgba(79, 70, 229, 0.12);
     }
 
     .slot-num {
-      font-size: 0.7rem;
+      font-size: 0.72rem;
       font-weight: 900;
       color: var(--muted);
       background: #e2e8f0;
-      padding: 2px 6px;
+      padding: 2px 7px;
       border-radius: 6px;
       flex-shrink: 0;
     }
 
     .slot-box.filled .slot-num {
-      background: var(--primary);
-      color: #fff;
+      background: var(--indigo);
+      color: #ffffff;
     }
 
     .slot-label {
-      font-size: 0.84rem;
-      font-weight: 700;
+      font-size: 0.83rem;
+      font-weight: 800;
       color: #94a3b8;
-      line-height: 1.3;
+      line-height: 1.25;
+      word-break: break-word;
     }
 
     .slot-box.filled .slot-label {
       color: var(--text);
     }
 
-    /* 交差トグルボタン */
+    /* 交叉トグルボタン */
     .cross-btn {
-      width: 72px;
+      width: 68px;
       flex-shrink: 0;
       border-radius: 10px;
       border: 2px solid var(--border);
       background: var(--card);
       color: var(--muted);
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 800;
       cursor: pointer;
       display: flex;
@@ -472,14 +523,14 @@
       align-items: center;
       justify-content: center;
       line-height: 1.15;
+      padding: 4px 2px;
       transition: all 0.15s;
-      padding: 4px;
     }
 
     .cross-btn.active {
-      background: var(--cross-light);
-      border-color: var(--cross);
-      color: var(--cross);
+      background: var(--warning-light);
+      border-color: var(--warning);
+      color: var(--warning);
       box-shadow: 0 1px 4px rgba(217, 119, 6, 0.25);
     }
 
@@ -487,43 +538,30 @@
       transform: scale(0.95);
     }
 
-    /* アラート・揺れ演出 */
-    .feedback-banner {
+    .puzzle-feedback {
       display: none;
-      border-radius: 10px;
+      border-radius: 11px;
       padding: 10px 12px;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 800;
       text-align: center;
+      line-height: 1.45;
     }
 
-    .feedback-banner.error {
+    .puzzle-feedback.error {
       display: block;
       background: var(--danger-light);
       color: var(--danger);
-      border: 1px solid #fca5a5;
+      border: 1px solid var(--danger-border);
     }
 
-    .feedback-banner.success {
+    .puzzle-feedback.success {
       display: block;
       background: var(--success-light);
       color: var(--success);
-      border: 1px solid #86efac;
+      border: 1px solid var(--success-border);
     }
 
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      20% { transform: translateX(-7px); }
-      40% { transform: translateX(7px); }
-      60% { transform: translateX(-5px); }
-      80% { transform: translateX(5px); }
-    }
-
-    .shake {
-      animation: shake 0.38s ease-in-out;
-    }
-
-    /* 選択肢カードエリア */
     .choices-header {
       display: flex;
       justify-content: space-between;
@@ -535,31 +573,27 @@
       background: #f1f5f9;
       border: 1px solid var(--border);
       color: var(--muted);
-      font-size: 0.75rem;
+      font-size: 0.73rem;
       font-weight: 700;
       padding: 4px 10px;
       border-radius: 8px;
       cursor: pointer;
     }
 
-    .reset-link-btn:active {
-      background: #e2e8f0;
-    }
-
-    .choices-grid {
+    .puzzle-choices-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(2, 1fr);
       gap: 8px;
     }
 
-    .choice-card {
+    .puzzle-card {
       background: var(--card);
       border: 2px solid var(--border);
       border-radius: 10px;
-      padding: 11px 8px;
-      min-height: 54px;
-      font-size: 0.82rem;
-      font-weight: 700;
+      padding: 10px 8px;
+      min-height: 48px;
+      font-size: 0.8rem;
+      font-weight: 800;
       color: var(--text);
       cursor: pointer;
       display: flex;
@@ -568,36 +602,228 @@
       text-align: center;
       line-height: 1.3;
       transition: all 0.15s;
-      word-break: break-word;
     }
 
-    .choice-card:active:not(:disabled) {
-      transform: scale(0.97);
-      border-color: var(--primary);
-      background: var(--primary-light);
+    .puzzle-card:active:not(:disabled) {
+      transform: scale(0.96);
+      border-color: var(--indigo);
+      background: var(--indigo-light);
     }
 
-    .choice-card:disabled {
+    .puzzle-card:disabled {
       background: #f1f5f9;
       border-color: #e2e8f0;
       color: #94a3b8;
-      opacity: 0.45;
+      opacity: 0.42;
       cursor: default;
     }
 
-    .play-actions {
+    /* ==========================================
+       タブ②：部位マッチング プレイ画面
+       ========================================== */
+    .board {
+      display: grid;
+      grid-template-columns: 1fr 1.34fr;
+      gap: 9px;
+      flex: 1;
+      align-content: start;
+    }
+
+    .column {
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      margin-top: 4px;
+      gap: 9px;
+    }
+
+    .col-header {
+      font-size: 0.73rem;
+      text-align: center;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .match-card {
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 8px;
+      min-height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 0.83rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.1s, background-color 0.15s, border-color 0.15s, opacity 0.25s;
+      user-select: none;
+      word-break: break-word;
+      line-height: 1.32;
+    }
+
+    .match-card.answer-card {
+      font-size: 0.74rem;
+      font-weight: 700;
+    }
+
+    .match-card.selected {
+      border-color: var(--indigo);
+      background: var(--indigo-light);
+      color: var(--indigo-dark);
+      transform: scale(1.02);
+    }
+
+    .match-card.correct {
+      border-color: var(--success);
+      background: var(--success-light);
+      color: var(--success);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .match-card.wrong {
+      border-color: var(--danger);
+      background: var(--danger-light);
+      color: var(--danger);
+      animation: shake 0.35s;
+    }
+
+    .hint-toast {
+      min-height: 60px;
+      background: var(--danger-light);
+      border: 1px solid var(--danger-border);
+      color: #991b1b;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 0.79rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 0.2s;
+      line-height: 1.42;
+    }
+
+    .hint-toast.show {
+      opacity: 1;
     }
 
     /* ==========================================
-       3. リザルト画面
+       タブ③：まとめ表（チートシート）
+       ========================================== */
+    .table-scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .cheat-table {
+      width: 100%;
+      min-width: 450px;
+      border-collapse: collapse;
+      font-size: 0.73rem;
+      line-height: 1.42;
+      background: var(--card);
+    }
+
+    .cheat-table th,
+    .cheat-table td {
+      padding: 8px 7px;
+      border-bottom: 1px solid #e2e8f0;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .cheat-table thead th {
+      background: #f1f5f9;
+      color: var(--text);
+      font-weight: 900;
+    }
+
+    .cheat-table th.th-motor { background: #fef2f2; color: #b91c1c; }
+    .cheat-table th.th-pain { background: #fff7ed; color: #c2410c; }
+    .cheat-table th.th-deep { background: #eff6ff; color: #1d4ed8; }
+
+    .cheat-table td.cell-head {
+      font-weight: 800;
+      background: #f8fafc;
+      white-space: nowrap;
+    }
+
+    .cheat-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .cord-svg-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 8px 6px;
+    }
+
+    .cord-svg-box svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .cord-legend-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-top: 10px;
+      font-size: 0.72rem;
+    }
+
+    .cord-legend-item {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 6px 8px;
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      line-height: 1.35;
+    }
+
+    .cord-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      flex-shrink: 0;
+      margin-top: 3px;
+    }
+
+    .point-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .point-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-left: 4px solid var(--indigo);
+      border-radius: 10px;
+      padding: 10px 11px;
+      font-size: 0.78rem;
+      line-height: 1.5;
+    }
+
+    .point-card strong {
+      display: block;
+      color: var(--indigo-dark);
+      font-size: 0.82rem;
+      margin-bottom: 3px;
+    }
+
+    /* ==========================================
+       共通リザルト画面
        ========================================== */
     .result-hero {
       text-align: center;
-      padding: 18px 16px;
+      padding: 16px;
       background: var(--card);
       border-radius: 14px;
       border: 1px solid #e2e8f0;
@@ -606,436 +832,1206 @@
 
     .new-record-badge {
       display: inline-block;
-      background: var(--cross-light);
-      color: var(--cross);
-      border: 1px solid var(--cross-border);
+      background: var(--warning-light);
+      color: var(--warning);
+      border: 1px solid var(--warning-border);
       font-size: 0.75rem;
       font-weight: 800;
-      padding: 2px 10px;
+      padding: 3px 11px;
       border-radius: 20px;
       margin-bottom: 6px;
     }
 
-    .rank-big {
-      font-size: 3rem;
+    .rank-badge {
+      display: inline-block;
+      font-size: 2.9rem;
       font-weight: 900;
       line-height: 1.05;
       margin: 4px 0;
     }
 
-    .rank-big.S { color: #d97706; }
-    .rank-big.A { color: #2563eb; }
-    .rank-big.B { color: #16a34a; }
+    .rank-badge.S { color: #d97706; }
+    .rank-badge.A { color: #2563eb; }
+    .rank-badge.B { color: #16a34a; }
 
-    .result-comment {
-      font-size: 0.88rem;
-      font-weight: 700;
-      color: var(--text);
-      margin-top: 6px;
-    }
-
-    .result-stats {
+    .stats-row {
       display: flex;
       justify-content: space-around;
-      margin-top: 14px;
+      margin-top: 12px;
       padding-top: 12px;
       border-top: 1px solid #f1f5f9;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       color: var(--muted);
     }
 
-    .result-stats strong {
+    .stats-row strong {
       display: block;
-      font-size: 1.05rem;
+      font-size: 1rem;
       color: var(--text);
       margin-top: 2px;
     }
 
-    /* 解説ステップ表示 */
-    .review-steps {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .review-step-item {
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 10px;
-      padding: 9px 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .review-step-item.is-cross {
-      background: var(--cross-light);
-      border-color: var(--cross-border);
-    }
-
-    .review-step-top {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.86rem;
-      font-weight: 800;
-    }
-
-    .review-step-num {
-      font-size: 0.7rem;
-      background: var(--primary);
-      color: #fff;
-      padding: 1px 6px;
-      border-radius: 5px;
-      flex-shrink: 0;
-    }
-
-    .cross-detail-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 0.75rem;
-      font-weight: 800;
-      color: #b45309;
-      background: #ffffff;
-      border: 1px solid var(--cross-border);
-      padding: 2px 8px;
-      border-radius: 6px;
-      align-self: flex-start;
-      margin-left: 34px;
-    }
-
-    /* OT臨床ポイント */
-    .clinical-card {
-      background: #eff6ff;
-      border: 2px solid var(--primary-border);
+    .topic-box {
+      background: var(--indigo-light);
+      border: 2px dashed var(--indigo);
       border-radius: 14px;
-      padding: 14px;
+      padding: 13px;
     }
 
-    .clinical-title {
-      font-size: 0.85rem;
+    .topic-label {
+      font-size: 0.76rem;
       font-weight: 800;
-      color: var(--primary);
-      margin: 0 0 6px 0;
+      color: var(--indigo);
+      margin-bottom: 5px;
     }
 
-    .clinical-text {
-      font-size: 0.86rem;
-      font-weight: 600;
-      color: #1e3a8a;
-      margin: 0;
+    .topic-target {
+      font-size: 0.98rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+      line-height: 1.45;
+    }
+
+    .toggle-answer-btn {
+      background: #ffffff;
+      border: 1px solid var(--indigo);
+      color: var(--indigo);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+
+    .topic-answer {
+      display: none;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--indigo-border);
+      font-size: 0.8rem;
       line-height: 1.55;
     }
 
-    .result-actions {
+    .topic-answer.open {
+      display: block;
+    }
+
+    .review-item {
+      border-bottom: 1px solid #e2e8f0;
+      padding: 9px 0;
+      font-size: 0.79rem;
+      line-height: 1.5;
+    }
+
+    .review-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .review-name {
+      font-weight: 900;
+      font-size: 0.88rem;
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .review-name.danger { color: var(--danger); }
+
+    .cross-pill {
+      font-size: 0.68rem;
+      font-weight: 900;
+      padding: 1px 7px;
+      border-radius: 8px;
+      background: var(--warning-light);
+      color: var(--warning);
+      border: 1px solid var(--warning-border);
+    }
+
+    .perfect-box {
+      background: var(--success-light);
+      border: 1px solid var(--success-border);
+      color: #166534;
+      border-radius: 12px;
+      padding: 13px;
+      text-align: center;
+      font-size: 0.85rem;
+      font-weight: 800;
+    }
+
+    /* ==========================================
+       【共通モジュール】国家試験過去問モード（.kokushi-*）
+       ========================================== */
+    .kokushi-banner-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border: 2px solid #f59e0b;
+      border-radius: 14px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      cursor: pointer;
+      color: #92400e;
+      font-size: 0.88rem;
+      font-weight: 900;
+      box-shadow: 0 3px 10px rgba(217, 119, 6, 0.18);
+      transition: transform 0.12s;
+      text-align: left;
+    }
+
+    .kokushi-banner-btn:active {
+      transform: scale(0.98);
+    }
+
+    .kokushi-banner-left {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+
+    .kokushi-banner-sub {
+      font-size: 0.73rem;
+      font-weight: 800;
+      background: rgba(255, 255, 255, 0.82);
+      color: #b45309;
+      padding: 2px 8px;
+      border-radius: 20px;
+      border: 1px solid #fcd34d;
+    }
+
+    .kokushi-hero-card {
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+      border: 2px solid #f59e0b;
+      border-radius: 16px;
+      padding: 16px;
       display: flex;
       flex-direction: column;
+      gap: 10px;
+    }
+
+    .kokushi-hero-title {
+      font-size: 1.05rem;
+      font-weight: 900;
+      color: #92400e;
+      margin: 0;
+    }
+
+    .kokushi-progress-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: #92400e;
+    }
+
+    .kokushi-progress-track {
+      width: 100%;
+      height: 11px;
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid #fcd34d;
+    }
+
+    .kokushi-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #f59e0b, #d97706);
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+
+    .kokushi-course-btn {
+      width: 100%;
+      background: var(--card);
+      border: 2px solid #e2e8f0;
+      border-radius: 13px;
+      padding: 14px 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.15s;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+    }
+
+    .kokushi-course-btn:active {
+      transform: scale(0.98);
+      border-color: #f59e0b;
+      background: #fffbeb;
+    }
+
+    .kokushi-course-btn.primary-course {
+      border-color: #f59e0b;
+      background: #fffbeb;
+    }
+
+    .kokushi-course-btn.weak-course {
+      border-color: #f97316;
+      background: #fff7ed;
+    }
+
+    .kokushi-course-main {
+      font-size: 0.93rem;
+      font-weight: 900;
+      color: var(--text);
+      display: block;
+    }
+
+    .kokushi-course-btn.weak-course .kokushi-course-main {
+      color: #c2410c;
+    }
+
+    .kokushi-course-sub {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--muted);
+      display: block;
+      margin-top: 2px;
+    }
+
+    .kokushi-play-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      background: var(--card);
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 10px 13px;
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .kokushi-meta-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .kokushi-meta-badge {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fcd34d;
+      padding: 3px 9px;
+      border-radius: 8px;
+      font-size: 0.76rem;
+      font-weight: 900;
+    }
+
+    .kokushi-type-badge {
+      padding: 3px 9px;
+      border-radius: 8px;
+      font-size: 0.73rem;
+      font-weight: 900;
+    }
+
+    .kokushi-type-badge.single {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      border: 1px solid var(--primary-border);
+    }
+
+    .kokushi-type-badge.multi {
+      background: #fee2e2;
+      color: #dc2626;
+      border: 1px solid #fca5a5;
+    }
+
+    .kokushi-question-card {
+      background: var(--card);
+      border: 1px solid #e2e8f0;
+      border-radius: 15px;
+      padding: 15px;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05);
+    }
+
+    .kokushi-question-text {
+      font-size: 0.98rem;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .kokushi-choices-list {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .kokushi-choice-btn {
+      width: 100%;
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 13px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.15s;
+      color: var(--text);
+      font-size: 0.87rem;
+      font-weight: 700;
+      line-height: 1.42;
+    }
+
+    .kokushi-choice-btn:active:not(:disabled) {
+      transform: scale(0.985);
+    }
+
+    .kokushi-choice-btn:disabled {
+      cursor: default;
+    }
+
+    .kokushi-choice-num {
+      width: 27px;
+      height: 27px;
+      border-radius: 50%;
+      background: #f1f5f9;
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 900;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: 1px solid #cbd5e1;
+    }
+
+    .kokushi-choice-btn.selected {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      color: var(--primary-dark);
+    }
+
+    .kokushi-choice-btn.selected .kokushi-choice-num {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    .kokushi-choice-btn.is-correct {
+      border-color: var(--success);
+      background: var(--success-light);
+      color: #166534;
+    }
+
+    .kokushi-choice-btn.is-correct .kokushi-choice-num {
+      background: var(--success);
+      color: #ffffff;
+      border-color: var(--success);
+    }
+
+    .kokushi-choice-btn.is-wrong {
+      border-color: var(--danger);
+      background: var(--danger-light);
+      color: #991b1b;
+    }
+
+    .kokushi-choice-btn.is-wrong .kokushi-choice-num {
+      background: var(--danger);
+      color: #ffffff;
+      border-color: var(--danger);
+    }
+
+    .kokushi-explain-card {
+      background: var(--card);
+      border-radius: 15px;
+      padding: 15px;
+      border: 2px solid #e2e8f0;
+      display: none;
+      flex-direction: column;
+      gap: 11px;
+      box-shadow: 0 3px 10px rgba(15, 23, 42, 0.06);
+    }
+
+    .kokushi-explain-card.open {
+      display: flex;
+    }
+
+    .kokushi-explain-card.ok {
+      border-color: #86efac;
+      background: #f0fdf4;
+    }
+
+    .kokushi-explain-card.ng {
+      border-color: #fca5a5;
+      background: #fef2f2;
+    }
+
+    .kokushi-judge-title {
+      font-size: 1.05rem;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       gap: 8px;
     }
 
-    .result-sub-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
+    .kokushi-judge-title.ok { color: #15803d; }
+    .kokushi-judge-title.ng { color: #b91c1c; }
+
+    .kokushi-point-box {
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 10px 12px;
+      border: 1px solid #e2e8f0;
+      font-size: 0.83rem;
+      line-height: 1.55;
+      color: var(--text);
+    }
+
+    .kokushi-notes-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 10px 12px;
+      border: 1px solid #e2e8f0;
+      font-size: 0.77rem;
+      line-height: 1.48;
+    }
+
+    .kokushi-note-row {
+      display: flex;
+      gap: 6px;
+      align-items: flex-start;
+      padding-bottom: 5px;
+      border-bottom: 1px dashed #e2e8f0;
+    }
+
+    .kokushi-note-row:last-child {
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .kokushi-note-num {
+      font-weight: 900;
+      color: var(--muted);
+      flex-shrink: 0;
+      min-width: 18px;
+    }
+
+    .kokushi-note-row.ans-row {
+      color: #15803d;
+      font-weight: 800;
+    }
+
+    .kokushi-next-btn {
+      background: linear-gradient(135deg, #d97706, #b45309);
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 0.96rem;
+      font-weight: 900;
+      cursor: pointer;
+      width: 100%;
+      box-shadow: 0 3px 8px rgba(180, 83, 9, 0.28);
+    }
+
+    .kokushi-next-btn:active {
+      transform: scale(0.98);
+    }
+
+    .kokushi-miss-item {
+      border-bottom: 1px solid #e2e8f0;
+      padding: 10px 0;
+      font-size: 0.8rem;
+      line-height: 1.5;
+    }
+
+    .kokushi-miss-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .kokushi-miss-meta {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #b45309;
+      margin-bottom: 2px;
+    }
+
+    .kokushi-miss-q {
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 4px;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- 共通ヘッダー -->
+    <!-- ヘッダー -->
     <header>
       <div class="header-title-wrap">
-        <h1>神経伝導路 パズル</h1>
-        <span class="header-sub">OT 1年次 基礎解剖・神経学（全14経路）</span>
+        <h1>🧠 神経伝導路パズル</h1>
+        <span class="header-sub">1回3分・解剖生理マスター</span>
       </div>
       <button id="soundToggle" class="sound-btn" type="button">🔊 音 ON</button>
     </header>
 
     <!-- ==========================================
-         1. スタート画面
+         1. トップ画面（国試バナー ＋ 3等分タブ）
          ========================================== -->
     <section id="startScreen" class="screen active">
-      <div class="section-card">
-        <p class="section-title">1. 難易度を選ぶ</p>
-        <div class="mode-grid">
-          <button id="modeEasyBtn" class="mode-btn selected" type="button" data-diff="easy">
-            <span class="mode-btn-title">初級（ダミーなし）</span>
-            <span class="mode-btn-sub">5枚を順番に並べる</span>
-          </button>
-          <button id="modeHardBtn" class="mode-btn" type="button" data-diff="hard">
-            <span class="mode-btn-title">上級（ダミーあり）</span>
-            <span class="mode-btn-sub">8枚から正しい5枚を選ぶ</span>
-          </button>
-        </div>
-      </div>
-
-      <button id="randomBtn" class="random-btn" type="button">
-        <span>🎲 ランダムで1問挑戦する</span>
+      <!-- 【共通モジュール入口】国家試験過去問バナー -->
+      <button id="kokushiEntryBtn" class="kokushi-banner-btn" type="button">
+        <span class="kokushi-banner-left">
+          <span>🎓 国家試験過去問に挑戦</span>
+          <span id="kokushiEntryBadge" class="kokushi-banner-sub">クリア済 0 / 19問</span>
+        </span>
+        <span>▶</span>
       </button>
 
-      <div class="section-card" style="padding: 12px;">
-        <p class="section-title">
-          <span>2. 伝導路を選んでスタート</span>
-          <span id="clearProgress" style="color: var(--primary);">0 / 14 クリア</span>
-        </p>
-        <div id="pathwayList" class="pathway-list"></div>
+      <!-- 1段3等分タブナビゲーション -->
+      <nav class="game-tabs" aria-label="学習モード切替">
+        <button id="tabPuzzleBtn" class="game-tab-btn active" type="button">
+          <span>🔄 伝導路パズル</span>
+          <span class="game-tab-sub">順番＋交叉チェック</span>
+        </button>
+        <button id="tabMatchBtn" class="game-tab-btn" type="button">
+          <span>⚡ 部位マッチング</span>
+          <span class="game-tab-sub">全18ペア特訓</span>
+        </button>
+        <button id="tabSummaryBtn" class="game-tab-btn" type="button">
+          <span>📖 まとめ表</span>
+          <span class="game-tab-sub">3大路・脊髄図解</span>
+        </button>
+      </nav>
+
+      <!-- タブ①：🔄 伝導路パズル -->
+      <div id="panelPuzzle" class="tab-panel active">
+        <div class="section-card">
+          <p class="section-title">ルートを選ぶ（全6ルート）</p>
+          <div id="routeList" class="mode-list"></div>
+        </div>
+
+        <div class="intro-box">
+          <strong>遊び方：</strong>下のカードを順番にタップして上の枠へ並べ、<strong>左右が交叉する部位の右端「交叉」ボタンをON</strong>にして「完成！判定する」を押そう！
+        </div>
+
+        <button id="startPuzzleBtn" class="primary-btn" type="button">伝導路パズルをスタート！</button>
+        <div id="puzzleBestText" class="best-record"></div>
+      </div>
+
+      <!-- タブ②：⚡ 部位マッチング -->
+      <div id="panelMatch" class="tab-panel">
+        <div class="section-card">
+          <p class="section-title">コースを選ぶ（全18ペア）</p>
+          <div class="mode-list">
+            <button class="select-btn match-course-btn selected" type="button" data-course="basic">
+              <div class="select-btn-left">
+                <div class="select-btn-top">
+                  <span class="level-pill basic">初級</span>
+                  <span>主要伝導路 ↔ 役割</span>
+                </div>
+                <span class="sub">錐体路・脊髄視床路・後索路・膝状体など（8ペア）</span>
+              </div>
+              <span id="recMatchBasic" class="record-pill">未挑戦</span>
+            </button>
+
+            <button class="select-btn match-course-btn" type="button" data-course="adv">
+              <div class="select-btn-left">
+                <div class="select-btn-top">
+                  <span class="level-pill adv">上級</span>
+                  <span>通過部位・交叉・小脳路・Papez回路</span>
+                </div>
+                <span class="sub">内包後脚・大脳脚・下小脳脚・薄束/楔状束など（10ペア）</span>
+              </div>
+              <span id="recMatchAdv" class="record-pill">未挑戦</span>
+            </button>
+
+            <button class="select-btn match-course-btn" type="button" data-course="random">
+              <div class="select-btn-left">
+                <div class="select-btn-top">
+                  <span class="level-pill basic">総合</span>
+                  <span>全範囲ランダム10ペア</span>
+                </div>
+                <span class="sub">全18ペアから毎回ランダムに出題</span>
+              </div>
+              <span id="recMatchRandom" class="record-pill">未挑戦</span>
+            </button>
+          </div>
+        </div>
+
+        <button id="startMatchBtn" class="primary-btn" type="button">部位マッチングをスタート！</button>
+        <button id="weakMatchBtn" class="weak-btn" type="button" style="display:none;">
+          🔥 弱点だけ復習（<span id="weakMatchCount">0</span>ペア）
+        </button>
+        <div id="matchBestText" class="best-record"></div>
+      </div>
+
+      <!-- タブ③：📖 まとめ表（チートシート） -->
+      <div id="panelSummary" class="tab-panel">
+        <!-- ① 3大伝導路 比較テーブル -->
+        <div class="section-card" style="padding: 13px;">
+          <p class="section-title">① 国試超頻出「3大伝導路」比較表</p>
+          <div class="table-scroll">
+            <table class="cheat-table">
+              <thead>
+                <tr>
+                  <th>項目</th>
+                  <th class="th-motor">随意運動<br>（外側皮質脊髄路）</th>
+                  <th class="th-pain">温痛覚<br>（外側脊髄視床路）</th>
+                  <th class="th-deep">深部感覚・識別触覚<br>（後索-内側毛帯路）</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cell-head">起始 /<br>受容器</td>
+                  <td>一次運動野<br>（中心前回）</td>
+                  <td>皮膚自由神経終末<br>→ 脊髄後根神経節</td>
+                  <td>筋紡錘・関節受容器<br>→ 脊髄後根神経節</td>
+                </tr>
+                <tr>
+                  <td class="cell-head">脊髄の<br>通り道</td>
+                  <td><strong>対側・側索</strong>を下行<br>→ 脊髄前角細胞</td>
+                  <td><strong>対側・側索</strong>を上行</td>
+                  <td><strong>同側・後索</strong>を上行<br>（薄束＝下肢 / 楔状束＝上肢）</td>
+                </tr>
+                <tr>
+                  <td class="cell-head">交叉する<br>場所</td>
+                  <td><strong>延髄（錐体交叉）</strong><br>※約80〜90%が交叉</td>
+                  <td><strong>脊髄（白交連）</strong><br>※入ってすぐ交叉</td>
+                  <td><strong>延髄（毛帯交叉）</strong><br>※後索核の直後で交叉</td>
+                </tr>
+                <tr>
+                  <td class="cell-head">主な<br>中継核</td>
+                  <td>内包後脚 → 大脳脚<br>→ 脊髄前角</td>
+                  <td>脊髄後角 → 視床VPL核<br>→ 内包後脚 → 中心後回</td>
+                  <td>延髄後索核 → 内側毛帯<br>→ 視床VPL核 → 中心後回</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ② SVGによる脊髄横断面イラスト図解 -->
+        <div class="section-card" style="padding: 13px;">
+          <p class="section-title">② 脊髄横断面イラスト図解（白質・灰白質）</p>
+          <div class="cord-svg-box">
+            <svg viewBox="0 0 340 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="脊髄横断面の伝導路イラスト">
+              <!-- 背側・腹側ラベル -->
+              <text x="170" y="15" text-anchor="middle" font-size="10" font-weight="900" fill="#475569">背側（後ろ・感覚系）</text>
+              <text x="170" y="223" text-anchor="middle" font-size="10" font-weight="900" fill="#475569">腹側（前・運動系）</text>
+
+              <!-- 脊髄外輪（白質） -->
+              <path
+                d="M 170 25
+                   C 235 25, 295 55, 295 115
+                   C 295 175, 238 205, 180 205
+                   L 174 176 L 170 176 L 166 176 L 160 205
+                   C 102 205, 45 175, 45 115
+                   C 45 55, 105 25, 170 25 Z"
+                fill="#ffffff"
+                stroke="#475569"
+                stroke-width="2.5"
+              />
+              <!-- 後正中溝 -->
+              <line x1="170" y1="25" x2="170" y2="96" stroke="#94a3b8" stroke-width="1.5" />
+
+              <!-- 後索：薄束（内側・下肢） -->
+              <path d="M 170 30 C 154 30, 146 42, 149 88 L 168 95 L 168 30 Z" fill="#dbeafe" stroke="#2563eb" stroke-width="1.3" />
+              <path d="M 170 30 C 186 30, 194 42, 191 88 L 172 95 L 172 30 Z" fill="#dbeafe" stroke="#2563eb" stroke-width="1.3" />
+
+              <!-- 後索：楔状束（外側・上肢） -->
+              <path d="M 148 34 C 132 38, 120 48, 124 84 L 147 88 Z" fill="#bfdbfe" stroke="#1d4ed8" stroke-width="1.3" />
+              <path d="M 192 34 C 208 38, 220 48, 216 84 L 193 88 Z" fill="#bfdbfe" stroke="#1d4ed8" stroke-width="1.3" />
+
+              <!-- 側索：外側皮質脊髄路（運動・赤） -->
+              <ellipse cx="92" cy="105" rx="22" ry="15" fill="#fecaca" stroke="#dc2626" stroke-width="1.5" />
+              <ellipse cx="248" cy="105" rx="22" ry="15" fill="#fecaca" stroke="#dc2626" stroke-width="1.5" />
+
+              <!-- 側索：外側脊髄視床路（温痛覚・オレンジ） -->
+              <ellipse cx="86" cy="144" rx="20" ry="13" fill="#fed7aa" stroke="#ea580c" stroke-width="1.5" />
+              <ellipse cx="254" cy="144" rx="20" ry="13" fill="#fed7aa" stroke="#ea580c" stroke-width="1.5" />
+
+              <!-- 前索：前皮質脊髄路＆前脊髄視床路（緑） -->
+              <ellipse cx="145" cy="184" rx="18" ry="10" fill="#bbf7d0" stroke="#16a34a" stroke-width="1.4" />
+              <ellipse cx="195" cy="184" rx="18" ry="10" fill="#bbf7d0" stroke="#16a34a" stroke-width="1.4" />
+
+              <!-- 灰白質（H字型：前角・後角） -->
+              <path
+                d="M 116 66
+                   C 124 60, 134 74, 138 98
+                   C 146 104, 194 104, 202 98
+                   C 206 74, 216 60, 224 66
+                   C 230 74, 222 104, 218 118
+                   C 230 132, 232 162, 214 166
+                   C 198 170, 190 154, 188 134
+                   C 178 128, 162 128, 152 134
+                   C 150 154, 142 170, 126 166
+                   C 108 162, 110 132, 122 118
+                   C 118 104, 110 74, 116 66 Z"
+                fill="#e2e8f0"
+                stroke="#475569"
+                stroke-width="1.8"
+              />
+
+              <!-- 中心管 & 白交連 -->
+              <circle cx="170" cy="116" r="3" fill="#ffffff" stroke="#475569" stroke-width="1.2" />
+              <text x="170" y="139" text-anchor="middle" font-size="7.5" font-weight="800" fill="#b45309">白交連(交叉)</text>
+
+              <!-- 部位テキスト -->
+              <text x="170" y="57" text-anchor="middle" font-size="8.5" font-weight="900" fill="#1e40af">薄束</text>
+              <text x="170" y="67" text-anchor="middle" font-size="7" font-weight="700" fill="#1e40af">(下肢)</text>
+
+              <text x="135" y="55" text-anchor="middle" font-size="7.5" font-weight="900" fill="#1d4ed8">楔状束</text>
+              <text x="205" y="55" text-anchor="middle" font-size="7.5" font-weight="900" fill="#1d4ed8">楔状束</text>
+
+              <text x="92" y="103" text-anchor="middle" font-size="7.5" font-weight="900" fill="#991b1b">外側皮質</text>
+              <text x="92" y="112" text-anchor="middle" font-size="7.5" font-weight="900" fill="#991b1b">脊髄路</text>
+
+              <text x="248" y="103" text-anchor="middle" font-size="7.5" font-weight="900" fill="#991b1b">外側皮質</text>
+              <text x="248" y="112" text-anchor="middle" font-size="7.5" font-weight="900" fill="#991b1b">脊髄路</text>
+
+              <text x="86" y="142" text-anchor="middle" font-size="7.2" font-weight="900" fill="#9a3412">外側脊髄</text>
+              <text x="86" y="151" text-anchor="middle" font-size="7.2" font-weight="900" fill="#9a3412">視床路</text>
+
+              <text x="254" y="142" text-anchor="middle" font-size="7.2" font-weight="900" fill="#9a3412">外側脊髄</text>
+              <text x="254" y="151" text-anchor="middle" font-size="7.2" font-weight="900" fill="#9a3412">視床路</text>
+
+              <text x="128" y="152" text-anchor="middle" font-size="8" font-weight="900" fill="#334155">前角</text>
+              <text x="212" y="152" text-anchor="middle" font-size="8" font-weight="900" fill="#334155">前角</text>
+              <text x="124" y="83" text-anchor="middle" font-size="7.5" font-weight="900" fill="#334155">後角</text>
+              <text x="216" y="83" text-anchor="middle" font-size="7.5" font-weight="900" fill="#334155">後角</text>
+
+              <text x="170" y="187" text-anchor="middle" font-size="7.5" font-weight="900" fill="#166534">前索（前皮質脊髄路・前脊髄視床路）</text>
+            </svg>
+          </div>
+
+          <div class="cord-legend-grid">
+            <div class="cord-legend-item">
+              <span class="cord-dot" style="background:#2563eb;"></span>
+              <div><strong>後索（深部感覚）</strong><br>内側＝薄束(下肢)／外側＝楔状束(上肢)</div>
+            </div>
+            <div class="cord-legend-item">
+              <span class="cord-dot" style="background:#dc2626;"></span>
+              <div><strong>側索・運動</strong><br>外側皮質脊髄路（錐体路）</div>
+            </div>
+            <div class="cord-legend-item">
+              <span class="cord-dot" style="background:#ea580c;"></span>
+              <div><strong>側索・温痛覚</strong><br>外側脊髄視床路（対側上行）</div>
+            </div>
+            <div class="cord-legend-item">
+              <span class="cord-dot" style="background:#16a34a;"></span>
+              <div><strong>前索</strong><br>前皮質脊髄路・前脊髄視床路</div>
+            </div>
+            <div class="cord-legend-item" style="grid-column: span 2;">
+              <span class="cord-dot" style="background:#64748b;"></span>
+              <div><strong>灰白質（H字）：</strong><strong>前角</strong>＝下位運動ニューロン細胞体 ／ <strong>後角</strong>＝感覚二次ニューロン細胞体</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ③ 特殊感覚・小脳路・Papez回路ポイント -->
+        <div class="section-card" style="padding: 13px;">
+          <p class="section-title">③ 特殊感覚・小脳路・Papez回路 暗記カード</p>
+          <div class="point-cards">
+            <div class="point-card">
+              <strong>👁️ 視覚 vs 👂 聴覚の中継核（国試の鉄板！）</strong>
+              ・<strong>視覚：</strong>視床の<strong>外側膝状体</strong> ＋ 中脳の<strong>上丘</strong>（視覚反射）<br>
+              ・<strong>聴覚：</strong>視床の<strong>内側膝状体</strong> ＋ 中脳の<strong>下丘</strong> ＋ <strong>外側毛帯</strong><br>
+              ※語呂：「外視（がいし）で上を見る、内聴（ないちょう）で下を聞く」
+            </div>
+            <div class="point-card">
+              <strong>🧭 小脳路と小脳脚</strong>
+              ・<strong>後脊髄小脳路：</strong>下半身の非意識性深部感覚 → <strong>下小脳脚</strong>を経て小脳へ（同側上行）。<br>
+              ・<strong>中小脳脚：</strong>橋核からの線維 ／ <strong>上小脳脚：</strong>主に小脳（歯状核）からの出力路。
+            </div>
+            <div class="point-card">
+              <strong>💭 Papez（パペッツ）回路（記憶・情動）</strong>
+              <strong>海馬 → 脳弓 → 乳頭体 → 視床前核 → 帯状回 → 海馬傍回 → 海馬</strong><br>
+              ※「縁上回」や「扁桃体」はPapez回路に含まれないのがひっかけ定番！
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
     <!-- ==========================================
-         2. プレイ画面
+         2. プレイ画面（タブ①：伝導路パズル）
          ========================================== -->
-    <section id="playScreen" class="screen">
-      <div class="play-header-card">
-        <div class="status-row">
-          <span class="timer-text">⏱ <span id="timer">0.0</span>秒</span>
-          <span id="playDiffLabel" style="font-size:0.75rem; color:var(--muted);">初級</span>
-          <span class="miss-text">ミス <span id="missCount">0</span>回</span>
-        </div>
-        <div id="playTitle" class="play-pathway-title"></div>
-        <span id="playFunc" class="func-badge"></span>
+    <section id="puzzlePlayScreen" class="screen">
+      <div class="status-bar">
+        <span>⏱ <span id="puzzleTimer">0.0</span>秒</span>
+        <span id="puzzleLevelTag" style="font-size:0.76rem; color:var(--muted);">初級</span>
+        <span class="miss-badge">ミス <span id="puzzleMiss">0</span>回</span>
+      </div>
+
+      <div class="route-banner">
+        <div id="puzzleRouteTitle" class="route-banner-title">ルート名</div>
+        <div id="puzzleRouteSub" class="route-banner-sub">サブ説明</div>
       </div>
 
       <div class="guide-text">
-        部位を順番にタップして並べ、交差する箇所には<strong>「✖ 交差」をON</strong>にして「完成！」を押そう（交差しない経路はOFFのまま）。
+        下のカードを順番にタップして並べ（上の枠タップで解除）、<strong>交叉するステップの右端「交叉」ボタンをON</strong>にして判定しよう！
       </div>
 
-      <!-- 組み立てエリア（Step1〜Step5） -->
-      <div id="slotsWrap" class="slots-wrap"></div>
+      <div id="puzzleSlotsWrap" class="slots-wrap"></div>
 
-      <!-- 正解・不正解フィードバック -->
-      <div id="feedbackBanner" class="feedback-banner"></div>
+      <div id="puzzleFeedback" class="puzzle-feedback"></div>
 
-      <!-- 選択肢カードエリア -->
       <div class="section-card" style="padding: 12px;">
         <div class="choices-header">
           <span class="section-title" style="margin:0;">選択肢カード（タップで配置）</span>
-          <button id="resetSlotsBtn" class="reset-link-btn" type="button">↺ リセット</button>
+          <button id="resetPuzzleBtn" class="reset-link-btn" type="button">↺ リセット</button>
         </div>
-        <div id="choicesGrid" class="choices-grid"></div>
+        <div id="puzzleChoicesGrid" class="puzzle-choices-grid"></div>
       </div>
 
-      <!-- 下部アクション -->
-      <div class="play-actions">
-        <button id="submitBtn" class="primary-btn" type="button" disabled>完成！（あと5つ選択）</button>
-        <button id="quitBtn" class="secondary-btn" type="button">タイトルに戻る</button>
-      </div>
+      <button id="submitPuzzleBtn" class="primary-btn" type="button" disabled>完成！判定する</button>
+      <button id="quitPuzzleBtn" class="secondary-btn" type="button">タイトルに戻る</button>
     </section>
 
     <!-- ==========================================
-         3. リザルト画面
+         3. プレイ画面（タブ②：部位マッチング）
+         ========================================== -->
+    <section id="matchPlayScreen" class="screen">
+      <div class="status-bar">
+        <span>⏱ <span id="matchTimer">0.0</span>秒</span>
+        <span>残り <span id="matchRemaining">0</span>ペア</span>
+        <span class="combo-badge">🔥 <span id="matchCombo">0</span>連続</span>
+      </div>
+
+      <div class="board">
+        <div class="column">
+          <div class="col-header">伝導路・部位</div>
+          <div id="matchLeftCol" class="column"></div>
+        </div>
+        <div class="column">
+          <div class="col-header">役割・特徴</div>
+          <div id="matchRightCol" class="column"></div>
+        </div>
+      </div>
+
+      <div id="matchHintToast" class="hint-toast"></div>
+      <button id="quitMatchBtn" class="secondary-btn" type="button">タイトルに戻る</button>
+    </section>
+
+    <!-- ==========================================
+         4. 共通リザルト画面（基礎学習用）
          ========================================== -->
     <section id="resultScreen" class="screen">
       <div class="result-hero">
         <div id="newRecordBadge" class="new-record-badge" style="display:none;">🎉 ベストタイム更新！</div>
         <div style="font-size:0.8rem; font-weight:700; color:var(--muted);">クリアランク</div>
-        <div id="resultRank" class="rank-big S">S</div>
-        <div id="resultComment" class="result-comment"></div>
-        <div class="result-stats">
-          <div>クリアタイム<strong id="resultTime">0.0秒</strong></div>
-          <div>ミス回数<strong id="resultMiss">0回</strong></div>
-          <div>難易度<strong id="resultDiff">初級</strong></div>
+        <div id="rankBadge" class="rank-badge S">S</div>
+        <div id="resultSub" style="font-size:0.84rem; font-weight:800;"></div>
+        <div class="stats-row">
+          <div>クリアタイム<strong id="finalTime">0.0秒</strong></div>
+          <div>ミス回数<strong id="finalMiss">0回</strong></div>
+          <div><span id="finalThirdLabel">最大連続</span><strong id="finalThirdValue">0回</strong></div>
         </div>
       </div>
 
-      <!-- 完成した伝導路の解説 -->
+      <!-- グループ学習「ひとこと解説お題」 -->
+      <div class="topic-box">
+        <div class="topic-label">👥 グループ学習「ひとこと解説お題」</div>
+        <div id="topicTarget" class="topic-target"></div>
+        <button id="toggleTopicAnswer" class="toggle-answer-btn" type="button">解答・ヒントを見る</button>
+        <div id="topicAnswer" class="topic-answer"></div>
+      </div>
+
+      <!-- ルートまとめ or ミス復習リスト -->
       <div class="section-card">
-        <p class="section-title">✅ 完成した伝導路の解説</p>
-        <div id="reviewPathwayName" style="font-size:0.95rem; font-weight:800; margin-bottom:8px;"></div>
-        <div id="reviewSteps" class="review-steps"></div>
+        <p id="reviewSectionTitle" class="section-title">復習リスト</p>
+        <div id="reviewList"></div>
       </div>
 
-      <!-- OT臨床ポイント -->
-      <div class="clinical-card">
-        <p class="clinical-title">🏥 OT臨床ポイント</p>
-        <p id="clinicalText" class="clinical-text"></p>
-      </div>
+      <button id="retryBtn" class="primary-btn" type="button">もう一度チャレンジ（リベンジ）</button>
+      <button id="backHomeBtn" class="secondary-btn" type="button">タイトルに戻る</button>
+    </section>
 
-      <!-- リザルト下部ボタン -->
-      <div class="result-actions">
-        <button id="retryBtn" class="primary-btn" type="button">もう一度チャレンジ（リベンジ）</button>
-        <div class="result-sub-actions">
-          <button id="nextBtn" class="secondary-btn" type="button">次の伝導路へ ➡</button>
-          <button id="backListBtn" class="secondary-btn" type="button">一覧に戻る</button>
+    <!-- ==========================================
+         5. 【共通モジュール】国家試験過去問モード画面群
+         ========================================== -->
+    <!-- 5-1. 過去問スタート画面 -->
+    <section id="kokushiStartScreen" class="screen">
+      <div class="kokushi-hero-card">
+        <h2 class="kokushi-hero-title">🎓 国家試験過去問に挑戦（神経伝導路・全19問）</h2>
+        <div class="kokushi-progress-row">
+          <span id="kokushiStartProgressText">クリア済 0 / 19問</span>
+          <span id="kokushiStartProgressPct">0%</span>
+        </div>
+        <div class="kokushi-progress-track">
+          <div id="kokushiStartProgressBar" class="kokushi-progress-fill" style="width:0%;"></div>
         </div>
       </div>
+
+      <div class="section-card" style="display:flex; flex-direction:column; gap:9px;">
+        <p class="section-title" style="margin-bottom:2px;">コースを選ぶ</p>
+        <button id="kokushiBtnRand5" class="kokushi-course-btn primary-course" type="button">
+          <div>
+            <span class="kokushi-course-main">⚡ ランダム5問（約3分）</span>
+            <span class="kokushi-course-sub">通学・休み時間のスピード確認に</span>
+          </div>
+          <span>▶</span>
+        </button>
+
+        <button id="kokushiBtnRand10" class="kokushi-course-btn" type="button">
+          <div>
+            <span class="kokushi-course-main">📘 ランダム10問</span>
+            <span class="kokushi-course-sub">実力をしっかりテストしたいときに</span>
+          </div>
+          <span>▶</span>
+        </button>
+
+        <button id="kokushiBtnAll" class="kokushi-course-btn" type="button">
+          <div>
+            <span class="kokushi-course-main">🏆 全19問チャレンジ</span>
+            <span class="kokushi-course-sub">収録している神経伝導路の過去問を完全制覇</span>
+          </div>
+          <span>▶</span>
+        </button>
+
+        <button id="kokushiBtnWeak" class="kokushi-course-btn weak-course" type="button" style="display:none;">
+          <div>
+            <span class="kokushi-course-main">🔥 間違えた問題だけ復習（<span id="kokushiWeakCount">0</span>問）</span>
+            <span class="kokushi-course-sub">正解すると自動で弱点リストから解除されます</span>
+          </div>
+          <span>▶</span>
+        </button>
+      </div>
+
+      <button id="kokushiBackToBaseBtn" class="secondary-btn" type="button">← 基礎学習に戻る</button>
     </section>
+
+    <!-- 5-2. 過去問出題画面 -->
+    <section id="kokushiPlayScreen" class="screen">
+      <div class="kokushi-play-header">
+        <div class="kokushi-meta-group">
+          <span id="kokushiMetaBadge" class="kokushi-meta-badge">第48回 午後 問55</span>
+          <span id="kokushiTypeBadge" class="kokushi-type-badge single">【1つ選べ】</span>
+        </div>
+        <span id="kokushiPlayProgress" style="color:var(--muted); font-variant-numeric:tabular-nums;">1 / 5</span>
+      </div>
+
+      <div class="kokushi-question-card">
+        <p id="kokushiQuestionText" class="kokushi-question-text"></p>
+      </div>
+
+      <div id="kokushiChoicesList" class="kokushi-choices-list"></div>
+
+      <div id="kokushiExplainCard" class="kokushi-explain-card">
+        <div id="kokushiJudgeTitle" class="kokushi-judge-title"></div>
+        <div id="kokushiPointBox" class="kokushi-point-box"></div>
+        <div id="kokushiNotesList" class="kokushi-notes-list"></div>
+        <button id="kokushiNextBtn" class="kokushi-next-btn" type="button">次の問題へ ▶</button>
+      </div>
+
+      <button id="kokushiQuitBtn" class="secondary-btn" type="button">過去問トップに戻る</button>
+    </section>
+
+    <!-- 5-3. 過去問リザルト画面 -->
+    <section id="kokushiResultScreen" class="screen">
+      <div class="result-hero">
+        <div style="font-size:0.8rem; font-weight:700; color:var(--muted);">国試過去問 チャレンジ結果</div>
+        <div id="kokushiRankBadge" class="rank-badge S">S</div>
+        <div id="kokushiResultSub" style="font-size:0.84rem; font-weight:800;"></div>
+        <div class="stats-row">
+          <div>正答数<strong id="kokushiFinalScore">0 / 5問</strong></div>
+          <div>正答率<strong id="kokushiFinalRate">0%</strong></div>
+          <div>累計クリア<strong id="kokushiFinalCleared">0 / 19問</strong></div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <p id="kokushiMissTitle" class="section-title">今回間違えた問題</p>
+        <div id="kokushiMissList"></div>
+      </div>
+
+      <button id="kokushiResultWeakBtn" class="weak-btn" type="button" style="display:none;">
+        🔥 間違えた問題をすぐ復習（<span id="kokushiResultWeakCount">0</span>問）
+      </button>
+      <button id="kokushiToTopBtn" class="kokushi-next-btn" type="button">過去問トップへ戻る</button>
+      <button id="kokushiResultBackBtn" class="secondary-btn" type="button">← 基礎学習に戻る</button>
+    </section>
+
+    <!-- フッター -->
+    <footer style="text-align: center; padding: 24px 16px 32px; color: #64748b; font-size: 12px; letter-spacing: 0.03em;">&copy;Created by Shunsuke Usui</footer>
   </div>
 
   <script>
     /**
      * =========================================================================
-     * 全14伝導路 マスターデータ
+     * 1. マスターデータ（伝導路パズル6ルート ＋ 部位マッチング18ペア ＋ 解説お題）
      * =========================================================================
      */
-    const PATHWAYS = [
+    const PATHWAY_ROUTES = [
       {
-        id: "P01",
-        name: "外側皮質脊髄路 (錐体路の主経路)",
-        func: "四肢遠位部の随意運動",
-        steps: ["大脳皮質運動野", "内包後脚", "中脳大脳脚", "延髄の錐体", "脊髄前角運動細胞"],
-        crossIndices: [3],
-        crossDetails: { 3: "ここで交差（錐体交叉）" },
-        dummies: ["内包前脚", "内側毛帯", "視床"],
-        clinical: "脳卒中で内包後脚が損傷すると、この経路が断たれて対側の重度な片麻痺が生じます。"
+        id: "r_corticospinal",
+        level: "basic",
+        levelLabel: "初級",
+        name: "外側皮質脊髄路",
+        sub: "錐体路・随意運動（6ステップ）",
+        steps: [
+          "一次運動野（中心前回）",
+          "内包後脚",
+          "中脳（大脳脚）",
+          "延髄（錐体）",
+          "対側・脊髄側索",
+          "脊髄前角細胞"
+        ],
+        crossIndex: 3,
+        crossNote: "延髄（錐体）で約80〜90%の線維が錐体交叉する。"
       },
       {
-        id: "P02",
-        name: "前皮質脊髄路 (錐体路の非交叉路)",
-        func: "体幹・近位筋の随意運動",
-        steps: ["大脳皮質運動野", "内包後脚", "中脳・橋・延髄を同側下行", "脊髄白交連", "脊髄前角運動細胞"],
-        crossIndices: [3],
-        crossDetails: { 3: "ここで交差" },
-        dummies: ["脊髄後索", "延髄錐体交叉", "小脳"],
-        clinical: "体幹や近位筋のコントロールに関わるため、麻痺側でも姿勢保持がある程度保たれる理由の一つとなります。"
-      },
-      {
-        id: "P03",
-        name: "皮質核路 (皮質延髄路)",
-        func: "顔面・咀嚼・舌・咽頭筋の随意運動",
-        steps: ["大脳皮質運動野（下部）", "内包膝部", "中脳大脳脚", "脳幹（多くは両側性に支配）", "脳神経運動核"],
-        crossIndices: [],
-        crossDetails: {},
-        dummies: ["内包後脚", "脊髄前角", "脊髄白交連"],
-        clinical: "嚥下や構音に関わります。多くが両側支配のため、片側の脳損傷では嚥下障害が比較的軽度で済むことがあります（偽性球麻痺）。"
-      },
-      {
-        id: "P04",
+        id: "r_lat_spinothalamic",
+        level: "basic",
+        levelLabel: "初級",
         name: "外側脊髄視床路",
-        func: "温覚・痛覚",
-        steps: ["脊髄後根神経節（DRG）", "脊髄後角（膠様質など）", "脊髄白交連", "脊髄側索 → 脊髄毛帯", "視床(VPL) → 一次体性感覚野"],
-        crossIndices: [2],
-        crossDetails: { 2: "ここで交差" },
-        dummies: ["延髄の毛帯交叉", "脊髄後索", "内側毛帯"],
-        clinical: "この経路が脊髄内で交差するため、脊髄半側損傷（ブラウン・セカール症候群）では損傷部以下の「対側」の温痛覚が消失します。"
+        sub: "温痛覚（6ステップ）",
+        steps: [
+          "脊髄後根神経節",
+          "脊髄後角（白交連）",
+          "対側・脊髄側索",
+          "視床（VPL核）",
+          "内包後脚",
+          "一次体性感覚野（中心後回）"
+        ],
+        crossIndex: 1,
+        crossNote: "脊髄後角でシナプスを換え、白交連で対側へ交叉して側索を上行する。"
       },
       {
-        id: "P05",
+        id: "r_dorsal_column",
+        level: "basic",
+        levelLabel: "初級",
+        name: "後索-内側毛帯路",
+        sub: "深部感覚・識別性触覚（6ステップ）",
+        steps: [
+          "脊髄後根神経節",
+          "同側・脊髄後索（薄束・楔状束）",
+          "延髄後索核",
+          "対側・内側毛帯",
+          "視床（VPL核）",
+          "一次体性感覚野（中心後回）"
+        ],
+        crossIndex: 2,
+        crossNote: "脊髄では交叉せず同側後索を上行し、延髄後索核の直後（毛帯交叉）で交叉する。"
+      },
+      {
+        id: "r_ant_spinothalamic",
+        level: "adv",
+        levelLabel: "上級",
         name: "前脊髄視床路",
-        func: "粗大触覚・圧覚",
-        steps: ["脊髄後根神経節（DRG）", "脊髄後角", "脊髄白交連", "脊髄前索 → 内側毛帯", "視床(VPL) → 一次体性感覚野"],
-        crossIndices: [2],
-        crossDetails: { 2: "ここで交差" },
-        dummies: ["脊髄後索", "延髄の毛帯交叉", "外側毛帯"],
-        clinical: "温痛覚（外側）と同じく脊髄で交差します。精細な触覚とは別の経路である点に注意が必要です。"
+        sub: "粗大触覚・圧覚（5ステップ）",
+        steps: [
+          "脊髄後根神経節",
+          "脊髄後角（白交連）",
+          "対側・脊髄前索",
+          "視床（VPL核）",
+          "一次体性感覚野（中心後回）"
+        ],
+        crossIndex: 1,
+        crossNote: "脊髄後角（白交連）で対側へ交叉し、対側の脊髄前索を上行する。"
       },
       {
-        id: "P06",
-        name: "後索―内側毛帯路",
-        func: "意識にのぼる深部感覚、精細触覚",
-        steps: ["脊髄後根神経節（DRG）", "脊髄後索（薄束・楔状束）", "延髄後索核（薄束核・楔状束核）", "内弓状線維", "内側毛帯 → 視床(VPL) → 皮質"],
-        crossIndices: [3],
-        crossDetails: { 3: "ここで交差（毛帯交叉）" },
-        dummies: ["脊髄白交連", "外側毛帯", "上小脳脚"],
-        clinical: "延髄で交差するため、ブラウン・セカール症候群では損傷部以下の「同側」の深部感覚が消失します。"
+        id: "r_visual",
+        level: "adv",
+        levelLabel: "上級",
+        name: "視覚伝導路（視路）",
+        sub: "網膜→一次視覚野（7ステップ）",
+        steps: [
+          "網膜",
+          "視神経",
+          "視交叉",
+          "視索",
+          "外側膝状体（視床）",
+          "視放線",
+          "一次視覚野"
+        ],
+        crossIndex: 2,
+        crossNote: "視交叉で左右の鼻側網膜からの線維（耳側視野）が交叉する。"
       },
       {
-        id: "P07",
-        name: "後脊髄小脳路",
-        func: "下半身の無意識的深部感覚",
-        steps: ["脊髄後根神経節（DRG）", "胸髄核（Clarke核）", "脊髄側索後外側部を同側上行", "下小脳脚", "小脳皮質（虫部・中間部）"],
-        crossIndices: [],
-        crossDetails: {},
-        dummies: ["上小脳脚", "内側毛帯", "視床"],
-        clinical: "交差せずに同側を上行します。小脳への深部感覚フィードバックが失われると運動失調が生じます。"
-      },
-      {
-        id: "P08",
-        name: "前脊髄小脳路",
-        func: "無意識的深部感覚・運動指令のFB",
-        steps: ["脊髄後根神経節（DRG）", "脊髄後角基部", "脊髄白交連", "上小脳脚 → 小脳内", "小脳皮質（虫部・中間部）"],
-        crossIndices: [2, 3],
-        crossDetails: { 2: "ここで交差", 3: "再交差" },
-        dummies: ["下小脳脚", "視床", "内包後脚"],
-        clinical: "脊髄で一度交差し、小脳に入る際にもう一度交差するため、結果的に同側の情報を小脳に伝えます。"
-      },
-      {
-        id: "P09",
-        name: "視覚伝導路",
-        func: "視覚情報",
-        steps: ["網膜", "視神経", "視交叉", "視索 → 外側膝状体（視床）", "視放線 → 一次視覚野"],
-        crossIndices: [2],
-        crossDetails: { 2: "鼻側線維のみここで交差" },
-        dummies: ["内側膝状体", "下丘", "上小脳脚"],
-        clinical: "視交叉より後ろ（視索や後頭葉）が損傷すると、対側の視野が欠損する「同名半盲」が生じます。"
-      },
-      {
-        id: "P10",
+        id: "r_auditory",
+        level: "adv",
+        levelLabel: "上級",
         name: "聴覚伝導路",
-        func: "聴覚情報",
-        steps: ["内耳コルチ器", "蝸牛神経核（延髄・橋）", "台形体", "外側毛帯 → 下丘 → 内側膝状体", "聴放線 → 一次聴覚野"],
-        crossIndices: [2],
-        crossDetails: { 2: "ここで多くは交差" },
-        dummies: ["外側膝状体", "上丘", "内側毛帯"],
-        clinical: "聴覚は両側性に大脳に送られるため、片側の一次聴覚野が損傷しても完全な片耳の失聴にはなりません。"
+        sub: "蝸牛→一次聴覚野（7ステップ）",
+        steps: [
+          "蝸牛（コルチ器）",
+          "蝸牛神経核",
+          "上オリーブ核",
+          "外側毛帯",
+          "下丘（中脳）",
+          "内側膝状体（視床）",
+          "一次聴覚野"
+        ],
+        crossIndex: 2,
+        crossNote: "上オリーブ核レベルで一部が交叉するため、一側中枢障害でも完全難聴になりにくい。"
+      }
+    ];
+
+    const MATCH_ITEMS = [
+      // --- 初級（8ペア） ---
+      { id: "pm01", level: "basic", left: "外側皮質脊髄路", right: "随意運動（延髄錐体で交叉・側索下行）", hint: "錐体路のメインルート。延髄の錐体交叉で対側側索へ移り、脊髄前角へ！" },
+      { id: "pm02", level: "basic", left: "外側脊髄視床路", right: "温痛覚（脊髄で交叉・対側側索上行）", hint: "脊髄に入ってすぐ白交連で交叉するため、障害部位より下の対側の温痛覚が低下。" },
+      { id: "pm03", level: "basic", left: "後索-内側毛帯路", right: "深部感覚・識別性触覚（延髄で交叉・同側後索上行）", hint: "脊髄内は同側の後索を上行し、延髄後索核のあとに毛帯交叉して内側毛帯になる。" },
+      { id: "pm04", level: "basic", left: "前脊髄視床路", right: "粗大触覚・圧覚（脊髄で交叉・対側前索上行）", hint: "外側脊髄視床路と同じく脊髄（白交連）で交叉し、対側の「前索」を上行する。" },
+      { id: "pm05", level: "basic", left: "脊髄前角", right: "下位運動ニューロンの細胞体が存在", hint: "灰白質の腹側にある前角から骨格筋を支配する運動神経が出る！" },
+      { id: "pm06", level: "basic", left: "脊髄後根神経節", right: "体性感覚の一次ニューロン細胞体が存在", hint: "皮膚や筋紡錘からの一次求心性ニューロンの細胞体は後根神経節（DRG）にある。" },
+      { id: "pm07", level: "basic", left: "外側膝状体", right: "視覚の中継核（視床）", hint: "語呂『外視（がいし）』＝外側膝状体は視覚の中継核！" },
+      { id: "pm08", level: "basic", left: "内側膝状体", right: "聴覚の中継核（視床）", hint: "語呂『内聴（ないちょう）』＝内側膝状体は聴覚の中継核！" },
+
+      // --- 上級（10ペア） ---
+      { id: "pm09", level: "adv", left: "前皮質脊髄路", right: "延髄で交叉せず同側前索を下行（脊髄各髄節で交叉）", hint: "延髄で交叉しない残り10〜20%の錐体路線維！国試の定番ひっかけ。" },
+      { id: "pm10", level: "adv", left: "外側毛帯", right: "聴覚情報を中脳下丘へ伝える伝導路", hint: "内側毛帯＝深部感覚、外側毛帯＝聴覚（下丘へ）！混同注意。" },
+      { id: "pm11", level: "adv", left: "上丘", right: "視覚反射に関与（中脳）", hint: "中脳四丘体の「上」が視覚反射、「下」が聴覚の中継。" },
+      { id: "pm12", level: "adv", left: "下丘", right: "聴覚の中継に関与（中脳）", hint: "外側毛帯から聴覚情報を受け取り、視床の内側膝状体へ送る。" },
+      { id: "pm13", level: "adv", left: "後脊髄小脳路", right: "下半身の非意識性深部感覚（下小脳脚を通過）", hint: "同側性に側索を上行し、下小脳脚を通って小脳へ到達する。" },
+      { id: "pm14", level: "adv", left: "薄束・楔状束", right: "後索を上行（薄束＝下半身、楔状束＝上半身）", hint: "内側が薄束（下肢）、外側が楔状束（上肢）。どちらも深部感覚を上行！" },
+      { id: "pm15", level: "adv", left: "中脳の大脳脚", right: "錐体路（皮質脊髄路）が通過", hint: "内包後脚を下行した錐体路は、中脳腹側の「大脳脚」を通過する。" },
+      { id: "pm16", level: "adv", left: "内包後脚", right: "錐体路・感覚路が密集して通過", hint: "小さな出血・梗塞でも反対側の重度な片麻痺と感覚障害をきたす要所！" },
+      { id: "pm17", level: "adv", left: "Papez回路", right: "海馬→脳弓→乳頭体→視床前核→帯状回（記憶の回路）", hint: "記憶・情動の重要回路。縁上回や扁桃体は含まれないのが国試頻出！" },
+      { id: "pm18", level: "adv", left: "網様体脊髄路", right: "脳幹網様体と脊髄を結び姿勢制御に関与", hint: "錐体外路系の下行路で、抗重力筋の緊張や歩行時の姿勢制御を担う。" }
+    ];
+
+    const GROUP_TOPICS = [
+      {
+        title: "ブラウン・セカール症候群（脊髄半側障害）で、左右どちらの『運動・深部感覚・温痛覚』が障害されるか1分で説明しよう！",
+        answer: "<strong>障害側（同側）：</strong>すでに延髄で交叉済みの<strong>運動麻痺（外側皮質脊髄路）</strong>と、まだ交叉していない<strong>深部感覚障害（後索路）</strong>が出現します。<br><strong>反対側（対側）：</strong>脊髄に入ってすぐ交叉する<strong>温痛覚障害（外側脊髄視床路）</strong>が出現します。"
       },
       {
-        id: "P11",
-        name: "味覚伝導路",
-        func: "味覚情報",
-        steps: ["舌・咽頭の味蕾", "顔面・舌咽・迷走神経節", "延髄の孤束核", "中心被蓋路近傍を上行（同側）", "視床(VPM) → 島皮質・弁蓋部"],
-        crossIndices: [],
-        crossDetails: {},
-        dummies: ["視床(VPL)", "外側毛帯", "視交叉"],
-        clinical: "味覚は他の多くの感覚と異なり、交差せずに同側の脳へ向かうのが大きな特徴です。"
+        title: "右の「内包後脚」に出血が起きたとき、体のどちら側にどんな症状が出るか、伝導路の交叉から1分で説明しよう！",
+        answer: "内包後脚は延髄の錐体交叉や毛帯交叉より<strong>上位（中枢側）</strong>にあるため、右の内包後脚が障害されると、<strong>反対側（左側）の上下肢に運動麻痺（左片麻痺）と感覚障害</strong>が同時に出現します。"
       },
       {
-        id: "P12",
-        name: "赤核脊髄路",
-        func: "屈筋筋緊張亢進・協調運動",
-        steps: ["中脳 赤核", "腹側被蓋交叉", "脳幹被蓋を下行", "脊髄側索を下行", "脊髄前角（屈筋支配）"],
-        crossIndices: [1],
-        crossDetails: { 1: "ここで交差" },
-        dummies: ["錐体交叉", "内側毛帯", "延髄"],
-        clinical: "錐体路を補完して運動を制御します。中脳以下での除脳硬直のメカニズムに関与します。"
+        title: "「視覚」と「聴覚」の伝導路で、視床の中継核と中脳の部位をセットで1分で説明しよう！",
+        answer: "<strong>視覚</strong>は視床の<strong>外側膝状体</strong>、中脳の<strong>上丘</strong>（視覚反射）を通ります。<strong>聴覚</strong>は<strong>外側毛帯</strong>から中脳の<strong>下丘</strong>、視床の<strong>内側膝状体</strong>を通ります。『外視・上』『内聴・下』で対比して覚えると確実です。"
       },
       {
-        id: "P13",
-        name: "前庭脊髄路",
-        func: "抗重力筋（伸筋）筋緊張・平衡反射",
-        steps: ["前庭神経核（延髄・橋）", "交叉せず下行（外側路）", "脊髄前索を下行", "脊髄前角（伸筋支配）", "骨格筋へ投射"],
-        crossIndices: [],
-        crossDetails: {},
-        dummies: ["延髄の錐体", "内包後脚", "視床"],
-        clinical: "バランスを崩した際に、とっさに姿勢を立て直すための伸筋（抗重力筋）の緊張を高めます。"
-      },
-      {
-        id: "P14",
-        name: "Papez回路",
-        func: "エピソード記憶の固定・情動発現",
-        steps: ["海馬", "脳弓", "乳頭体（視床下部）", "視床前核", "帯状回 → 海馬傍回 → 海馬"],
-        crossIndices: [],
-        crossDetails: {},
-        dummies: ["外側膝状体", "内包", "扁桃体"],
-        clinical: "記憶を司る重要なループ構造です。アルツハイマー型認知症などで海馬が萎縮すると、新しいことが覚えられなくなります。"
+        title: "脊髄の「後索」を走る薄束と楔状束は、それぞれ体のどこからの情報をどう伝えているか1分で説明しよう！",
+        answer: "後索は同側の深部感覚（位置覚・振動覚）と識別性触覚を上行させます。内側を走る<strong>薄束は下半身（下肢）</strong>、外側を走る<strong>楔状束は上半身（上肢）</strong>からの情報を延髄後索核へ伝えます。"
       }
     ];
 
     /**
      * =========================================================================
-     * 状態管理 & ストレージ
+     * 2. ストレージ・効果音・ユーティリティ
      * =========================================================================
      */
-    const STORAGE_KEY = "ot_neural_pathway_records_v1";
+    const STORAGE_MAIN_KEY = "ot_pathway_puzzle_v1";
     const RANK_WEIGHT = { S: 3, A: 2, B: 1 };
 
-    let currentDiff = "easy"; // "easy" | "hard"
     let soundOn = true;
-    let currentPathwayIndex = 0;
-
-    // プレイ中状態
-    let choices = []; // { id, text, used }
-    let slots = [null, null, null, null, null]; // choiceId or null
-    let crossFlags = [false, false, false, false, false];
-    let timerInterval = null;
-    let startTime = 0;
-    let elapsedSec = 0;
-    let missCount = 0;
-    let isLocked = false;
-
-    // Web Audio API 効果音
     let audioCtx = null;
+
     function playSound(type) {
       if (!soundOn) return;
       try {
@@ -1046,8 +2042,7 @@
           audioCtx.resume();
         }
         const now = audioCtx.currentTime;
-
-        const playTone = (freq, dur, wave, vol, delay = 0) => {
+        const tone = (freq, dur, wave, vol, delay = 0) => {
           const osc = audioCtx.createOscillator();
           const gain = audioCtx.createGain();
           osc.type = wave;
@@ -1061,37 +2056,52 @@
         };
 
         if (type === "tap") {
-          playTone(540, 0.06, "sine", 0.07);
-        } else if (type === "cross") {
-          playTone(720, 0.08, "triangle", 0.08);
-        } else if (type === "wrong") {
-          playTone(210, 0.18, "sawtooth", 0.1, 0);
-          playTone(165, 0.22, "sawtooth", 0.1, 0.1);
+          tone(540, 0.05, "sine", 0.06);
+        } else if (type === "toggle") {
+          tone(740, 0.07, "triangle", 0.08);
+        } else if (type === "ok") {
+          tone(660, 0.09, "sine", 0.12, 0);
+          tone(990, 0.15, "sine", 0.12, 0.06);
+        } else if (type === "ng") {
+          tone(210, 0.15, "sawtooth", 0.1, 0);
+          tone(160, 0.2, "sawtooth", 0.1, 0.09);
         } else if (type === "clear") {
-          playTone(523.25, 0.12, "sine", 0.12, 0);
-          playTone(659.25, 0.12, "sine", 0.12, 0.09);
-          playTone(783.99, 0.12, "sine", 0.12, 0.18);
-          playTone(1046.5, 0.35, "sine", 0.14, 0.27);
+          tone(523.25, 0.11, "sine", 0.12, 0);
+          tone(659.25, 0.11, "sine", 0.12, 0.09);
+          tone(783.99, 0.11, "sine", 0.12, 0.18);
+          tone(1046.5, 0.34, "sine", 0.14, 0.27);
         }
       } catch (e) {}
     }
 
-    function loadRecords() {
+    function loadMainStorage() {
       try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+        const raw = JSON.parse(localStorage.getItem(STORAGE_MAIN_KEY) || "{}");
+        return {
+          records: (raw.records && typeof raw.records === "object") ? raw.records : {},
+          weakMatchIds: Array.isArray(raw.weakMatchIds) ? raw.weakMatchIds : []
+        };
       } catch (e) {
-        return {};
+        return { records: {}, weakMatchIds: [] };
       }
     }
 
-    function saveRecord(pathwayId, diff, sec, rank) {
-      const records = loadRecords();
-      const key = `${pathwayId}_${diff}`;
-      const prev = records[key];
+    function saveMainStorage(data) {
+      try {
+        localStorage.setItem(STORAGE_MAIN_KEY, JSON.stringify({
+          records: data.records,
+          weakMatchIds: [...new Set(data.weakMatchIds)]
+        }));
+      } catch (e) {}
+    }
+
+    function saveCourseRecord(key, sec, rank) {
+      const st = loadMainStorage();
+      const prev = st.records[key];
       let isNewBest = false;
 
       if (!prev) {
-        records[key] = { bestTime: sec, bestRank: rank };
+        st.records[key] = { bestTime: sec, bestRank: rank };
         isNewBest = true;
       } else {
         if (sec < prev.bestTime) {
@@ -1102,11 +2112,27 @@
           prev.bestRank = rank;
         }
       }
-
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
-      } catch (e) {}
+      saveMainStorage(st);
       return isNewBest;
+    }
+
+    function getWeakMatchIds() {
+      const valid = new Set(MATCH_ITEMS.map(m => m.id));
+      return loadMainStorage().weakMatchIds.filter(id => valid.has(id));
+    }
+
+    function addWeakMatchId(id) {
+      const st = loadMainStorage();
+      if (!st.weakMatchIds.includes(id)) {
+        st.weakMatchIds.push(id);
+        saveMainStorage(st);
+      }
+    }
+
+    function removeWeakMatchId(id) {
+      const st = loadMainStorage();
+      st.weakMatchIds = st.weakMatchIds.filter(x => x !== id);
+      saveMainStorage(st);
     }
 
     function shuffle(arr) {
@@ -1118,147 +2144,234 @@
       return a;
     }
 
+    function calcRank(misses) {
+      if (misses === 0) return "S";
+      if (misses <= 2) return "A";
+      return "B";
+    }
+
     /**
      * =========================================================================
-     * 画面切り替え & スタート画面
+     * 3. 画面・状態管理
      * =========================================================================
      */
+    let activeTab = "puzzle";
+    let selectedRouteId = PATHWAY_ROUTES[0].id;
+    let selectedMatchCourse = "basic";
+    let lastSession = null;
+
+    let timerInterval = null;
+    let startTime = 0;
+    let elapsedSec = 0;
+
+    let puzzleState = {
+      route: null,
+      choices: [],
+      slots: [],
+      crossFlags: [],
+      missCount: 0,
+      isLocked: false
+    };
+
+    let matchState = {
+      course: "basic",
+      isWeakMode: false,
+      playedList: [],
+      batches: [],
+      batchIndex: 0,
+      currentBatch: [],
+      selectedLeft: null,
+      selectedRight: null,
+      matchedInBatch: 0,
+      clearedTotal: 0,
+      missCount: 0,
+      combo: 0,
+      maxCombo: 0,
+      missedSet: new Set(),
+      hintTimer: null
+    };
+
     function showScreen(id) {
       document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
       document.getElementById(id).classList.add("active");
       window.scrollTo({ top: 0, behavior: "instant" });
     }
 
-    function renderStartScreen() {
-      const records = loadRecords();
-      const listEl = document.getElementById("pathwayList");
-      listEl.innerHTML = "";
-
-      let clearedCount = 0;
-
-      PATHWAYS.forEach((p, idx) => {
-        const rec = records[`${p.id}_${currentDiff}`];
-        if (rec) clearedCount++;
-
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "pathway-item";
-
-        const rankHtml = rec
-          ? `<span class="mini-rank rank-${rec.bestRank}">${rec.bestRank}</span><span class="mini-time">${rec.bestTime.toFixed(1)}秒</span>`
-          : `<span class="mini-rank rank-none">未挑戦</span>`;
-
-        btn.innerHTML = `
-          <div class="pathway-left">
-            <div class="pathway-top-row">
-              <span class="pathway-id">${p.id}</span>
-              <span class="pathway-name">${p.name}</span>
-            </div>
-            <div class="pathway-func">${p.func}</div>
-          </div>
-          <div class="pathway-right">${rankHtml}</div>
-        `;
-
-        btn.onclick = () => {
-          playSound("tap");
-          startPathway(idx);
-        };
-        listEl.appendChild(btn);
-      });
-
-      document.getElementById("clearProgress").textContent = `${clearedCount} / ${PATHWAYS.length} クリア`;
+    function stopTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
     }
 
     /**
      * =========================================================================
-     * プレイ画面ロジック
+     * 4. スタート画面描画
      * =========================================================================
      */
-    function startPathway(index) {
-      currentPathwayIndex = index;
-      const p = PATHWAYS[index];
+    function setRecordPill(el, rec) {
+      if (!el) return;
+      if (rec) {
+        el.className = "record-pill has-record";
+        el.innerHTML = `<span class="mini-rank rank-${rec.bestRank}">${rec.bestRank}</span><span>${rec.bestTime.toFixed(1)}秒</span>`;
+      } else {
+        el.className = "record-pill";
+        el.textContent = "未挑戦";
+      }
+    }
 
-      // 選択肢生成
-      const rawTexts = currentDiff === "hard"
-        ? [...p.steps, ...p.dummies]
-        : [...p.steps];
+    function renderStartScreen() {
+      if (typeof KokushiModule !== "undefined") {
+        KokushiModule.updateEntryBadge();
+      }
 
-      choices = shuffle(rawTexts).map((text, i) => ({
-        id: i,
-        text,
-        used: false
-      }));
+      document.getElementById("tabPuzzleBtn").classList.toggle("active", activeTab === "puzzle");
+      document.getElementById("tabMatchBtn").classList.toggle("active", activeTab === "match");
+      document.getElementById("tabSummaryBtn").classList.toggle("active", activeTab === "summary");
 
-      slots = [null, null, null, null, null];
-      crossFlags = [false, false, false, false, false];
-      missCount = 0;
-      isLocked = false;
+      document.getElementById("panelPuzzle").classList.toggle("active", activeTab === "puzzle");
+      document.getElementById("panelMatch").classList.toggle("active", activeTab === "match");
+      document.getElementById("panelSummary").classList.toggle("active", activeTab === "summary");
 
-      document.getElementById("playTitle").textContent = `${p.id} ${p.name}`;
-      document.getElementById("playFunc").textContent = `機能：${p.func}`;
-      document.getElementById("playDiffLabel").textContent = currentDiff === "hard" ? "上級（ダミーあり）" : "初級（ダミーなし）";
-      document.getElementById("missCount").textContent = "0";
-      hideFeedback();
+      const st = loadMainStorage();
 
-      renderPlayBoard();
-      showScreen("playScreen");
+      // タブ①：6ルート一覧描画
+      const routeListEl = document.getElementById("routeList");
+      routeListEl.innerHTML = "";
+      PATHWAY_ROUTES.forEach(r => {
+        const rec = st.records[`puzzle_${r.id}`];
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "select-btn" + (selectedRouteId === r.id ? " selected" : "");
+        btn.innerHTML = `
+          <div class="select-btn-left">
+            <div class="select-btn-top">
+              <span class="level-pill ${r.level}">${r.levelLabel}</span>
+              <span>${r.name}</span>
+            </div>
+            <span class="sub">${r.sub}</span>
+          </div>
+          <span class="record-pill ${rec ? "has-record" : ""}">
+            ${rec ? `<span class="mini-rank rank-${rec.bestRank}">${rec.bestRank}</span><span>${rec.bestTime.toFixed(1)}秒</span>` : "未挑戦"}
+          </span>
+        `;
+        btn.onclick = () => {
+          playSound("tap");
+          selectedRouteId = r.id;
+          renderStartScreen();
+        };
+        routeListEl.appendChild(btn);
+      });
 
-      // タイマー開始
-      clearInterval(timerInterval);
+      const curRouteRec = st.records[`puzzle_${selectedRouteId}`];
+      document.getElementById("puzzleBestText").textContent = curRouteRec
+        ? `選択中ルートの最高記録：ランク ${curRouteRec.bestRank} ／ ${curRouteRec.bestTime.toFixed(1)}秒`
+        : "まだクリア記録がありません";
+
+      // タブ②：マッチング記録＆弱点ボタン
+      setRecordPill(document.getElementById("recMatchBasic"), st.records["match_basic"]);
+      setRecordPill(document.getElementById("recMatchAdv"), st.records["match_adv"]);
+      setRecordPill(document.getElementById("recMatchRandom"), st.records["match_random"]);
+
+      const weakIds = getWeakMatchIds();
+      const weakBtn = document.getElementById("weakMatchBtn");
+      if (weakIds.length > 0) {
+        weakBtn.style.display = "block";
+        document.getElementById("weakMatchCount").textContent = String(weakIds.length);
+      } else {
+        weakBtn.style.display = "none";
+      }
+
+      const curMatchRec = st.records[`match_${selectedMatchCourse}`];
+      document.getElementById("matchBestText").textContent = curMatchRec
+        ? `選択中コースの最高記録：ランク ${curMatchRec.bestRank} ／ ${curMatchRec.bestTime.toFixed(1)}秒`
+        : "まだクリア記録がありません";
+    }
+
+    /**
+     * =========================================================================
+     * 5. タブ①：🔄 伝導路パズル（順番並べ替え ＋ 交叉チェック）
+     * =========================================================================
+     */
+    function startPuzzleGame() {
+      playSound("tap");
+      const route = PATHWAY_ROUTES.find(r => r.id === selectedRouteId) || PATHWAY_ROUTES[0];
+      lastSession = { tab: "puzzle", routeId: route.id };
+
+      const len = route.steps.length;
+      puzzleState = {
+        route,
+        choices: shuffle(route.steps.map((label, stepIdx) => ({
+          id: stepIdx,
+          label,
+          used: false
+        }))),
+        slots: Array(len).fill(null),
+        crossFlags: Array(len).fill(false),
+        missCount: 0,
+        isLocked: false
+      };
+
+      document.getElementById("puzzleLevelTag").textContent = `【${route.levelLabel}】${len}ステップ`;
+      document.getElementById("puzzleMiss").textContent = "0";
+      document.getElementById("puzzleRouteTitle").textContent = route.name;
+      document.getElementById("puzzleRouteSub").textContent = route.sub;
+      hidePuzzleFeedback();
+
+      renderPuzzleBoard();
+      showScreen("puzzlePlayScreen");
+
+      stopTimer();
       startTime = performance.now();
       elapsedSec = 0;
-      document.getElementById("timer").textContent = "0.0";
+      document.getElementById("puzzleTimer").textContent = "0.0";
       timerInterval = setInterval(() => {
         elapsedSec = (performance.now() - startTime) / 1000;
-        document.getElementById("timer").textContent = elapsedSec.toFixed(1);
+        document.getElementById("puzzleTimer").textContent = elapsedSec.toFixed(1);
       }, 100);
     }
 
-    function renderPlayBoard() {
-      // 1. スロット描画
-      const slotsWrap = document.getElementById("slotsWrap");
+    function renderPuzzleBoard() {
+      const len = puzzleState.slots.length;
+      const slotsWrap = document.getElementById("puzzleSlotsWrap");
       slotsWrap.innerHTML = "";
 
-      for (let i = 0; i < 5; i++) {
-        if (i > 0) {
-          const arrow = document.createElement("div");
-          arrow.className = "slot-arrow";
-          arrow.textContent = "↓";
-          slotsWrap.appendChild(arrow);
-        }
-
+      for (let i = 0; i < len; i++) {
         const row = document.createElement("div");
         row.className = "slot-row";
 
-        const choiceId = slots[i];
-        const choiceObj = choiceId !== null ? choices.find(c => c.id === choiceId) : null;
+        const choiceId = puzzleState.slots[i];
+        const choiceObj = choiceId !== null ? puzzleState.choices.find(c => c.id === choiceId) : null;
 
-        // スロット本体
         const slotBtn = document.createElement("button");
         slotBtn.type = "button";
         slotBtn.className = "slot-box" + (choiceObj ? " filled" : "");
         slotBtn.innerHTML = `
-          <span class="slot-num">Step${i + 1}</span>
-          <span class="slot-label">${choiceObj ? choiceObj.text : "タップして選択..."}</span>
+          <span class="slot-num">${i + 1}</span>
+          <span class="slot-label">${choiceObj ? choiceObj.label : "タップして配置..."}</span>
         `;
         slotBtn.onclick = () => {
-          if (isLocked || choiceId === null) return;
+          if (puzzleState.isLocked || choiceId === null) return;
           playSound("tap");
-          removeFromSlot(i);
+          const c = puzzleState.choices.find(x => x.id === choiceId);
+          if (c) c.used = false;
+          puzzleState.slots[i] = null;
+          hidePuzzleFeedback();
+          renderPuzzleBoard();
         };
 
-        // 交差トグルボタン
         const crossBtn = document.createElement("button");
         crossBtn.type = "button";
-        crossBtn.className = "cross-btn" + (crossFlags[i] ? " active" : "");
-        crossBtn.innerHTML = crossFlags[i]
-          ? `<span>⚡</span><span>交差ON</span>`
-          : `<span>✖</span><span>交差</span>`;
+        crossBtn.className = "cross-btn" + (puzzleState.crossFlags[i] ? " active" : "");
+        crossBtn.innerHTML = puzzleState.crossFlags[i]
+          ? `<span>✖</span><span>交叉ON</span>`
+          : `<span>○</span><span>交叉</span>`;
         crossBtn.onclick = () => {
-          if (isLocked) return;
-          playSound("cross");
-          crossFlags[i] = !crossFlags[i];
-          renderPlayBoard();
+          if (puzzleState.isLocked) return;
+          playSound("toggle");
+          puzzleState.crossFlags[i] = !puzzleState.crossFlags[i];
+          hidePuzzleFeedback();
+          renderPuzzleBoard();
         };
 
         row.appendChild(slotBtn);
@@ -1266,210 +2379,748 @@
         slotsWrap.appendChild(row);
       }
 
-      // 2. 選択肢カード描画
-      const choicesGrid = document.getElementById("choicesGrid");
-      choicesGrid.innerHTML = "";
-      choices.forEach(c => {
+      const grid = document.getElementById("puzzleChoicesGrid");
+      grid.innerHTML = "";
+      puzzleState.choices.forEach(c => {
         const btn = document.createElement("button");
         btn.type = "button";
-        btn.className = "choice-card";
-        btn.textContent = c.text;
+        btn.className = "puzzle-card";
+        btn.textContent = c.label;
         btn.disabled = c.used;
         btn.onclick = () => {
-          if (isLocked || c.used) return;
-          placeChoice(c.id);
+          if (puzzleState.isLocked || c.used) return;
+          const emptyIdx = puzzleState.slots.findIndex(s => s === null);
+          if (emptyIdx === -1) return;
+          playSound("tap");
+          puzzleState.slots[emptyIdx] = c.id;
+          c.used = true;
+          hidePuzzleFeedback();
+          renderPuzzleBoard();
         };
-        choicesGrid.appendChild(btn);
+        grid.appendChild(btn);
       });
 
-      // 3. 完成ボタン状態更新
-      const emptyCount = slots.filter(s => s === null).length;
-      const submitBtn = document.getElementById("submitBtn");
+      const emptyCount = puzzleState.slots.filter(s => s === null).length;
+      const submitBtn = document.getElementById("submitPuzzleBtn");
       if (emptyCount === 0) {
         submitBtn.disabled = false;
-        submitBtn.textContent = "完成！答え合わせをする";
+        submitBtn.textContent = "完成！判定する";
       } else {
         submitBtn.disabled = true;
-        submitBtn.textContent = `完成！（あと${emptyCount}つ選択）`;
+        submitBtn.textContent = `完成！判定する（あと${emptyCount}つ）`;
       }
     }
 
-    function placeChoice(choiceId) {
-      const emptyIdx = slots.findIndex(s => s === null);
-      if (emptyIdx === -1) return;
-      playSound("tap");
-      slots[emptyIdx] = choiceId;
-      const c = choices.find(item => item.id === choiceId);
-      if (c) c.used = true;
-      hideFeedback();
-      renderPlayBoard();
+    function resetPuzzleSlots() {
+      const len = puzzleState.slots.length;
+      puzzleState.slots = Array(len).fill(null);
+      puzzleState.crossFlags = Array(len).fill(false);
+      puzzleState.choices.forEach(c => (c.used = false));
+      renderPuzzleBoard();
     }
 
-    function removeFromSlot(slotIdx) {
-      const choiceId = slots[slotIdx];
-      if (choiceId === null) return;
-      const c = choices.find(item => item.id === choiceId);
-      if (c) c.used = false;
-      slots[slotIdx] = null;
-      hideFeedback();
-      renderPlayBoard();
+    function showPuzzleFeedback(type, msg) {
+      const el = document.getElementById("puzzleFeedback");
+      el.className = `puzzle-feedback ${type}`;
+      el.textContent = msg;
     }
 
-    function resetAllSlots() {
-      slots = [null, null, null, null, null];
-      crossFlags = [false, false, false, false, false];
-      choices.forEach(c => (c.used = false));
-      renderPlayBoard();
+    function hidePuzzleFeedback() {
+      const el = document.getElementById("puzzleFeedback");
+      el.className = "puzzle-feedback";
+      el.textContent = "";
     }
 
-    function showFeedback(type, msg) {
-      const banner = document.getElementById("feedbackBanner");
-      banner.className = `feedback-banner ${type}`;
-      banner.textContent = msg;
-    }
+    function checkPuzzleAnswer() {
+      if (puzzleState.isLocked) return;
 
-    function hideFeedback() {
-      const banner = document.getElementById("feedbackBanner");
-      banner.className = "feedback-banner";
-      banner.textContent = "";
-    }
-
-    /**
-     * 答え合わせ判定
-     */
-    function checkAnswer() {
-      if (isLocked) return;
-      const p = PATHWAYS[currentPathwayIndex];
-
-      // 順番の一致確認
-      let stepsOk = true;
-      for (let i = 0; i < 5; i++) {
-        const c = choices.find(item => item.id === slots[i]);
-        if (!c || c.text !== p.steps[i]) {
-          stepsOk = false;
-          break;
-        }
-      }
-
-      // 交差箇所の完全一致確認
+      const route = puzzleState.route;
+      let orderOk = true;
       let crossOk = true;
-      for (let i = 0; i < 5; i++) {
-        const shouldCross = p.crossIndices.includes(i);
-        if (crossFlags[i] !== shouldCross) {
+
+      for (let i = 0; i < route.steps.length; i++) {
+        if (puzzleState.slots[i] !== i) {
+          orderOk = false;
+        }
+        const expectedCross = (i === route.crossIndex);
+        if (puzzleState.crossFlags[i] !== expectedCross) {
           crossOk = false;
-          break;
         }
       }
 
-      if (stepsOk && crossOk) {
-        // 正解！
-        isLocked = true;
-        clearInterval(timerInterval);
+      if (orderOk && crossOk) {
+        puzzleState.isLocked = true;
+        stopTimer();
         elapsedSec = (performance.now() - startTime) / 1000;
         playSound("clear");
-        showFeedback("success", "🎉 正解！完璧に伝導路が完成しました！");
-        setTimeout(() => {
-          showResult();
-        }, 650);
+        showPuzzleFeedback("success", "🎉 正解！伝導路の順番も交叉の位置も完璧です！");
+        setTimeout(finishPuzzleGame, 650);
       } else {
-        // 不正解：最初からやり直し
-        isLocked = true;
-        missCount++;
-        document.getElementById("missCount").textContent = String(missCount);
-        playSound("wrong");
-        showFeedback("error", "❌ 不正解！順番または交差箇所が間違っています。最初からやり直そう！");
+        puzzleState.missCount++;
+        document.getElementById("puzzleMiss").textContent = String(puzzleState.missCount);
+        playSound("ng");
 
-        const wrap = document.getElementById("slotsWrap");
+        let msg = "";
+        if (!orderOk && !crossOk) {
+          msg = "❌ 両方違う！『ステップの順番』と『交叉の位置』の両方を見直してやり直そう！";
+        } else if (!orderOk) {
+          msg = "❌ 順番が違う！『交叉』の位置は合っています。ステップの順番を修正しよう！";
+        } else {
+          msg = "❌ 交叉の位置が違う！ステップの順番は正解です。『交叉』ボタンの位置を見直そう！";
+        }
+        showPuzzleFeedback("error", msg);
+
+        const wrap = document.getElementById("puzzleSlotsWrap");
         wrap.classList.remove("shake");
-        void wrap.offsetWidth; // リフロー
+        void wrap.offsetWidth;
         wrap.classList.add("shake");
-
-        setTimeout(() => {
-          resetAllSlots();
-          isLocked = false;
-        }, 700);
       }
+    }
+
+    function finishPuzzleGame() {
+      const route = puzzleState.route;
+      const rank = calcRank(puzzleState.missCount);
+      const isNewRecord = saveCourseRecord(`puzzle_${route.id}`, elapsedSec, rank);
+      const topic = GROUP_TOPICS[Math.floor(Math.random() * GROUP_TOPICS.length)];
+
+      const summaryHtml = route.steps.map((st, idx) => `
+        <div class="review-item">
+          <div class="review-name">
+            <span>${idx + 1}. ${st}</span>
+            ${idx === route.crossIndex ? `<span class="cross-pill">✖ ここで交叉</span>` : ""}
+          </div>
+          ${idx === route.crossIndex ? `<div style="color:var(--muted);">💡 ${route.crossNote}</div>` : ""}
+        </div>
+      `).join("");
+
+      renderResultScreen({
+        rank,
+        subText: rank === "S"
+          ? "パーフェクト！伝導路の順番と交叉部位が完璧に定着しています！"
+          : (rank === "A" ? "素晴らしい！あと少しでノーミスSランクです！" : "クリアおめでとう！ルートまとめを確認してリベンジしよう！"),
+        timeSec: elapsedSec,
+        misses: puzzleState.missCount,
+        isNewRecord,
+        thirdLabel: "ルート",
+        thirdValue: route.name,
+        topicTitle: topic.title,
+        topicAnswerHtml: topic.answer,
+        reviewTitle: `📋 ${route.name} ステップまとめ`,
+        reviewHtml: summaryHtml
+      });
     }
 
     /**
      * =========================================================================
-     * リザルト画面
+     * 6. タブ②：⚡ 部位マッチング（最大5ペア／バッチ）
      * =========================================================================
      */
-    function showResult() {
-      const p = PATHWAYS[currentPathwayIndex];
+    function startMatchGame(isWeakMode = false) {
+      playSound("tap");
+      lastSession = { tab: "match", course: selectedMatchCourse, isWeakMode };
 
-      // ランク判定
-      let rank = "B";
-      let comment = "クリアおめでとう！もう一度挑戦してタイムを縮めよう！";
-
-      if (elapsedSec < 20.0 && missCount === 0) {
-        rank = "S";
-        comment = "神速＆パーフェクト！臨床でも即戦力の理解度です！";
-      } else if (elapsedSec < 35.0) {
-        rank = "A";
-        comment = missCount === 0
-          ? "素晴らしい！ノーミスでしっかり伝導路の流れがつかめています！"
-          : "素晴らしい！ミスを乗り越えて素早くクリアできました！";
+      let pool = [];
+      if (isWeakMode) {
+        const weakIds = getWeakMatchIds();
+        pool = MATCH_ITEMS.filter(m => weakIds.includes(m.id));
+        if (pool.length === 0) {
+          renderStartScreen();
+          return;
+        }
+      } else if (selectedMatchCourse === "basic") {
+        pool = MATCH_ITEMS.filter(m => m.level === "basic");
+      } else if (selectedMatchCourse === "adv") {
+        pool = MATCH_ITEMS.filter(m => m.level === "adv");
       } else {
-        rank = "B";
-        comment = missCount === 0
-          ? "ノーミスで確実にクリア！次はスピードアップを目指そう！"
-          : "粘り強くクリアできました！解説を確認してリベンジしよう！";
+        pool = shuffle(MATCH_ITEMS).slice(0, 10);
       }
 
-      const isNewBest = saveRecord(p.id, currentDiff, elapsedSec, rank);
+      const shuffled = shuffle(pool);
+      const batches = [];
+      for (let i = 0; i < shuffled.length; i += 5) {
+        batches.push(shuffled.slice(i, i + 5));
+      }
 
-      document.getElementById("newRecordBadge").style.display = isNewBest ? "inline-block" : "none";
-      const rankEl = document.getElementById("resultRank");
-      rankEl.textContent = rank;
-      rankEl.className = `rank-big ${rank}`;
+      if (matchState.hintTimer) clearTimeout(matchState.hintTimer);
+      matchState = {
+        course: selectedMatchCourse,
+        isWeakMode,
+        playedList: pool,
+        batches,
+        batchIndex: 0,
+        currentBatch: [],
+        selectedLeft: null,
+        selectedRight: null,
+        matchedInBatch: 0,
+        clearedTotal: 0,
+        missCount: 0,
+        combo: 0,
+        maxCombo: 0,
+        missedSet: new Set(),
+        hintTimer: null
+      };
 
-      document.getElementById("resultComment").textContent = comment;
-      document.getElementById("resultTime").textContent = `${elapsedSec.toFixed(1)}秒`;
-      document.getElementById("resultMiss").textContent = `${missCount}回`;
-      document.getElementById("resultDiff").textContent = currentDiff === "hard" ? "上級" : "初級";
+      document.getElementById("matchCombo").textContent = "0";
+      document.getElementById("matchHintToast").classList.remove("show");
+      showScreen("matchPlayScreen");
 
-      // 完成した伝導路の解説
-      document.getElementById("reviewPathwayName").textContent = `${p.id} ${p.name}（${p.func}）`;
-      const reviewStepsEl = document.getElementById("reviewSteps");
-      reviewStepsEl.innerHTML = "";
+      stopTimer();
+      startTime = performance.now();
+      elapsedSec = 0;
+      document.getElementById("matchTimer").textContent = "0.0";
+      timerInterval = setInterval(() => {
+        elapsedSec = (performance.now() - startTime) / 1000;
+        document.getElementById("matchTimer").textContent = elapsedSec.toFixed(1);
+      }, 100);
 
-      p.steps.forEach((stepText, idx) => {
-        const isCross = p.crossIndices.includes(idx);
-        const item = document.createElement("div");
-        item.className = "review-step-item" + (isCross ? " is-cross" : "");
+      loadMatchBatch(0);
+    }
 
-        const crossBadgeHtml = isCross
-          ? `<div class="cross-detail-badge">⚡ 交差ポイント：${p.crossDetails[idx] || "ここで交差"}</div>`
-          : "";
+    function loadMatchBatch(idx) {
+      matchState.batchIndex = idx;
+      matchState.currentBatch = matchState.batches[idx];
+      matchState.matchedInBatch = 0;
+      matchState.selectedLeft = null;
+      matchState.selectedRight = null;
 
-        item.innerHTML = `
-          <div class="review-step-top">
-            <span class="review-step-num">Step${idx + 1}</span>
-            <span>${stepText}</span>
-          </div>
-          ${crossBadgeHtml}
-        `;
-        reviewStepsEl.appendChild(item);
+      updateMatchRemaining();
+      renderMatchBoard();
+    }
+
+    function updateMatchRemaining() {
+      const rem = matchState.playedList.length - matchState.clearedTotal;
+      document.getElementById("matchRemaining").textContent = String(rem);
+    }
+
+    function renderMatchBoard() {
+      const leftCol = document.getElementById("matchLeftCol");
+      const rightCol = document.getElementById("matchRightCol");
+      leftCol.innerHTML = "";
+      rightCol.innerHTML = "";
+
+      shuffle(matchState.currentBatch).forEach(item => {
+        const card = document.createElement("div");
+        card.className = "match-card";
+        card.textContent = item.left;
+        card.dataset.answer = item.right;
+        card.onclick = () => selectMatchCard("left", card, item);
+        leftCol.appendChild(card);
       });
 
-      if (p.crossIndices.length === 0) {
-        const noCrossNote = document.createElement("div");
-        noCrossNote.style.cssText = "font-size:0.78rem; color:var(--muted); text-align:center; margin-top:4px; font-weight:700;";
-        noCrossNote.textContent = "※ この経路は交差なし（同側性・両側性）の経路です";
-        reviewStepsEl.appendChild(noCrossNote);
+      shuffle(matchState.currentBatch).forEach(item => {
+        const card = document.createElement("div");
+        card.className = "match-card answer-card";
+        card.textContent = item.right;
+        card.dataset.answer = item.right;
+        card.onclick = () => selectMatchCard("right", card, item);
+        rightCol.appendChild(card);
+      });
+    }
+
+    function selectMatchCard(side, el, item) {
+      if (el.classList.contains("correct")) return;
+      playSound("tap");
+
+      if (side === "left") {
+        if (matchState.selectedLeft) matchState.selectedLeft.el.classList.remove("selected");
+        matchState.selectedLeft = { el, item };
+        el.classList.add("selected");
+      } else {
+        if (matchState.selectedRight) matchState.selectedRight.el.classList.remove("selected");
+        matchState.selectedRight = { el, item };
+        el.classList.add("selected");
       }
 
-      // OT臨床ポイント
-      document.getElementById("clinicalText").textContent = p.clinical;
+      if (matchState.selectedLeft && matchState.selectedRight) {
+        checkMatchPair();
+      }
+    }
+
+    function checkMatchPair() {
+      const l = matchState.selectedLeft;
+      const r = matchState.selectedRight;
+      matchState.selectedLeft = null;
+      matchState.selectedRight = null;
+
+      const isCorrect = l.el.dataset.answer === r.el.dataset.answer;
+
+      if (isCorrect) {
+        playSound("ok");
+        l.el.classList.remove("selected");
+        r.el.classList.remove("selected");
+        l.el.classList.add("correct");
+        r.el.classList.add("correct");
+
+        matchState.combo++;
+        if (matchState.combo > matchState.maxCombo) matchState.maxCombo = matchState.combo;
+        document.getElementById("matchCombo").textContent = String(matchState.combo);
+
+        if (matchState.isWeakMode && !matchState.missedSet.has(l.item.id)) {
+          removeWeakMatchId(l.item.id);
+        }
+
+        matchState.matchedInBatch++;
+        matchState.clearedTotal++;
+        updateMatchRemaining();
+
+        if (matchState.matchedInBatch === matchState.currentBatch.length) {
+          setTimeout(() => {
+            if (matchState.batchIndex + 1 < matchState.batches.length) {
+              loadMatchBatch(matchState.batchIndex + 1);
+            } else {
+              finishMatchGame();
+            }
+          }, 320);
+        }
+      } else {
+        playSound("ng");
+        matchState.missCount++;
+        matchState.combo = 0;
+        document.getElementById("matchCombo").textContent = "0";
+
+        matchState.missedSet.add(l.item.id);
+        addWeakMatchId(l.item.id);
+
+        l.el.classList.remove("selected");
+        r.el.classList.remove("selected");
+        l.el.classList.add("wrong");
+        r.el.classList.add("wrong");
+
+        setTimeout(() => {
+          l.el.classList.remove("wrong");
+          r.el.classList.remove("wrong");
+        }, 380);
+
+        showMatchHint(`💡 ${l.item.left}：${l.item.hint}`);
+      }
+    }
+
+    function showMatchHint(text) {
+      const toast = document.getElementById("matchHintToast");
+      toast.textContent = text;
+      toast.classList.add("show");
+      if (matchState.hintTimer) clearTimeout(matchState.hintTimer);
+      matchState.hintTimer = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 3600);
+    }
+
+    function finishMatchGame() {
+      stopTimer();
+      elapsedSec = (performance.now() - startTime) / 1000;
+      playSound("clear");
+
+      const rank = calcRank(matchState.missCount);
+      let isNewRecord = false;
+      if (!matchState.isWeakMode) {
+        isNewRecord = saveCourseRecord(`match_${matchState.course}`, elapsedSec, rank);
+      }
+
+      const missedList = matchState.playedList.filter(it => matchState.missedSet.has(it.id));
+      const topic = GROUP_TOPICS[Math.floor(Math.random() * GROUP_TOPICS.length)];
+
+      const reviewHtml = missedList.length > 0
+        ? missedList.map(it => `
+            <div class="review-item">
+              <div class="review-name danger">${it.left}</div>
+              <div><strong>役割・特徴：</strong>${it.right}</div>
+              <div style="color:var(--muted);">💡 ${it.hint}</div>
+            </div>
+          `).join("")
+        : `<div class="perfect-box">🎉 ミスなしパーフェクト！神経伝導路の重要部位がバッチリ頭に入っています！</div>`;
+
+      renderResultScreen({
+        rank,
+        subText: rank === "S"
+          ? "パーフェクト！伝導路と通過部位のリンクが完璧です！"
+          : (rank === "A" ? "素晴らしい！あと少しでパーフェクトSランクです！" : "クリアおめでとう！ミスした項目を復習してリベンジしよう！"),
+        timeSec: elapsedSec,
+        misses: matchState.missCount,
+        isNewRecord,
+        thirdLabel: "最大連続",
+        thirdValue: `${matchState.maxCombo}回`,
+        topicTitle: topic.title,
+        topicAnswerHtml: topic.answer,
+        reviewTitle: missedList.length > 0 ? "今回ミスした項目（弱点リストに登録済み）" : "今回の結果",
+        reviewHtml
+      });
+    }
+
+    /**
+     * =========================================================================
+     * 7. 共通リザルト画面（基礎学習用）
+     * =========================================================================
+     */
+    function renderResultScreen({
+      rank, subText, timeSec, misses, isNewRecord,
+      thirdLabel, thirdValue, topicTitle, topicAnswerHtml,
+      reviewTitle, reviewHtml
+    }) {
+      document.getElementById("newRecordBadge").style.display = isNewRecord ? "inline-block" : "none";
+      const rankEl = document.getElementById("rankBadge");
+      rankEl.textContent = rank;
+      rankEl.className = `rank-badge ${rank}`;
+
+      document.getElementById("resultSub").textContent = subText;
+      document.getElementById("finalTime").textContent = `${timeSec.toFixed(1)}秒`;
+      document.getElementById("finalMiss").textContent = `${misses}回`;
+      document.getElementById("finalThirdLabel").textContent = thirdLabel;
+      document.getElementById("finalThirdValue").textContent = thirdValue;
+
+      document.getElementById("topicTarget").textContent = topicTitle;
+      const ansEl = document.getElementById("topicAnswer");
+      ansEl.classList.remove("open");
+      ansEl.innerHTML = topicAnswerHtml;
+
+      document.getElementById("reviewSectionTitle").textContent = reviewTitle;
+      document.getElementById("reviewList").innerHTML = reviewHtml;
 
       showScreen("resultScreen");
     }
 
     /**
      * =========================================================================
-     * イベントリスナー登録
+     * 8. 【共通モジュール】国家試験過去問に挑戦（KokushiModule：全19問）
+     *    localStorageキー: ot_kokushi_pathway
+     * =========================================================================
+     */
+    const KOKUSHI_STORAGE_KEY = "ot_kokushi_pathway";
+
+    const KOKUSHI_DATA = [
+      {"id": "48-PM-55", "meta": "第48回 午後 問55", "question": "視覚の伝導路はどれか。", "choices": ["外側膝状体", "レンズ核", "放線冠", "脳弓", "下丘"], "answers": [1], "point": "視覚の伝導路は、網膜→視神経→視交叉→外側膝状体（視床）→視放線→一次視覚野である。", "choiceNotes": ["○ 外側膝状体で中継される。", "× 大脳基底核を構成する核である。", "× 大脳皮質と下位中枢を結ぶ投射線維の放線である。", "× 海馬から乳頭体を結ぶ大脳辺縁系の線維束である。", "× 聴覚の伝導路に関与する（視覚は上丘）。"]},
+      {"id": "46-PM-53", "meta": "第46回 午後 問53", "question": "温痛覚の伝導路はどれか。", "choices": ["前皮質脊髄路", "後脊髄小脳路", "前脊髄小脳路", "前脊髄視床路", "外側脊髄視床路"], "answers": [5], "point": "温痛覚は後根から脊髄に入り、対側の脊髄側索（外側脊髄視床路）を上行して視床に至る。", "choiceNotes": ["× 随意運動を伝える下行路（錐体路）である。", "× 下半身の非意識性深部感覚を小脳へ伝える上行路である。", "× 下行性運動指令や深部感覚を小脳へ伝える上行路である。", "× 粗大触覚・圧覚を伝える伝導路である。", "○ 温覚および痛覚を伝える伝導路である。"]},
+      {"id": "54-AM-63", "meta": "第54回 午前 問63", "question": "左上肢の感覚と伝導路が通る部位との組合せで正しいのはどれか。", "choices": ["圧覚－左脊髄前索", "位置覚－右脊髄後索", "温覚－右脊髄後索", "振動覚－左脊髄側索", "痛覚－右脊髄側索"], "answers": [5], "point": "温痛覚（外側脊髄視床路）は白交連で交叉し、反対側の側索を上行して視床に向かう。", "choiceNotes": ["× 粗大圧覚は前脊髄視床路を通り対側（右側）前索を上行する。", "× 位置覚（深部感覚）は後索路を通り同側（左側）後索を上行する。", "× 温覚は外側脊髄視床路を通り対側（右側）側索を上行する。", "× 振動覚（深部感覚）は後索路を通り同側（左側）後索を上行する。", "○ 左上肢の痛覚は脊髄で交叉し右側索（外側脊髄視床路）を上行する。"]},
+      {"id": "53-AM-54", "meta": "第53回 午前 問54", "question": "錐体路について誤っているのはどれか。", "choices": ["大脳の運動皮質から始まる。", "大脳の基底核を経由する。", "大脳脚を経由する。", "大多数は延髄で交差する。", "脊髄の前角でシナプスを形成する。"], "answers": [2], "point": "錐体路は大脳皮質運動野から内包後脚、中脳大脳脚、橋、延髄錐体、脊髄前角へと下行し、大脳基底核は経由しない。", "choiceNotes": ["○ 中心前回などの大脳皮質運動野から始まる。", "× 大脳基底核は経由せず、内包後脚を通過する。", "○ 中脳の大脳脚を経由する。", "○ 約80〜90%の線維が延髄の錐体交叉で対側に交叉する。", "○ 脊髄前角細胞（下位運動ニューロン）とシナプスを形成する。"]},
+      {"id": "46-AM-53", "meta": "第46回 午前 問53", "question": "外側皮質脊髄路が交叉するのはどれか。", "choices": ["放線冠", "内包", "中脳", "延髄", "脊髄"], "answers": [4], "point": "錐体路線維の約80〜90%は延髄の錐体交叉で交叉し、外側皮質脊髄路として側索を下行する。", "choiceNotes": ["× 交叉しない。", "× 交叉しない（内包後脚を通過する）。", "× 交叉しない（中脳大脳脚を通過する）。", "○ 延髄の錐体交叉で交叉する。", "× 交叉しない（前皮質脊髄路が脊髄各髄節で交叉する）。"]},
+      {"id": "48-AM-54", "meta": "第48回 午前 問54", "question": "Papez回路に含まれないのはどれか。", "choices": ["海馬傍回", "視床前核", "縁上回", "乳頭体", "帯状回"], "answers": [3], "point": "Papez回路は「海馬→脳弓→乳頭体→視床前核→帯状回→海馬傍回→海馬」で構成され、縁上回は含まれない。", "choiceNotes": ["○ 帯状回から海馬へ至る経路に含まれる。", "○ 乳頭体から乳頭視床束（ヴィク・ダジュール束）を介して接続する。", "× 頭頂葉の連合野に位置し、Papez回路には含まれない。", "○ 脳弓を介して海馬からの投射を受ける。", "○ 視床前核からの投射を受ける。"]},
+      {"id": "61-PM-52", "meta": "第61回 午後 問52", "question": "視床へ上行性に接続するのはどれか。", "choices": ["副神経", "内側毛帯", "皮質橋路", "赤核脊髄路", "皮質脊髄路"], "answers": [2], "point": "内側毛帯は深部感覚等の情報を延髄後索核から視床へ伝える上行性伝導路である。", "choiceNotes": ["× 僧帽筋や胸鎖乳突筋を支配する運動神経である。", "○ 延髄後索核からの線維が交叉して内側毛帯となり視床へ上行する。", "× 大脳皮質から橋へ下行する線維である。", "× 赤核（中脳）から脊髄へ下行する伝導路である。", "× 大脳皮質から脊髄へ下行する運動伝導路（錐体路）である。"]},
+      {"id": "60-PM-58", "meta": "第60回 午後 問58", "question": "皮質脊髄路に含まれるのはどれか。", "choices": ["海馬", "視床", "大脳脚", "中心後回", "内包前脚"], "answers": [3], "point": "皮質脊髄路は大脳皮質運動野から内包後脚、中脳大脳脚、橋縦束、延髄錐体を通って下行する。", "choiceNotes": ["× 大脳辺縁系に属する。", "× 感覚の中継核である間脳に属する。", "○ 中脳の大脳脚中央部を通過する。", "× 一次体性感覚野であり、皮質脊髄路は中心前回から起こる。", "× 内包後脚を通過する。"]},
+      {"id": "47-AM-54", "meta": "第47回 午前 問54", "question": "外側皮質脊髄路について正しいのはどれか。2つ選べ。", "choices": ["後索を通る", "延髄で交叉する", "運動前野からの投射線維を含まない", "脊髄で前角細胞にシナプス結合する", "上肢に対応する線維は下肢に対応する線維よりも外側にある"], "answers": [2, 4], "point": "外側皮質脊髄路は延髄で交叉し側索を下行して前角細胞に結合する。上肢線維は内側、下肢線維は外側に位置する。", "choiceNotes": ["× 脊髄の側索を下行する。", "○ 延髄下端の錐体交叉で交叉する。", "× 一次運動野（4野）のほか運動前野（6野）等からの線維も含む。", "○ 脊髄側索を下行し前角細胞にシナプス結合する。", "× 上肢に対応する線維は内側、下肢に対応する線維は外側を通る。"]},
+      {"id": "51-AM-55", "meta": "第51回 午前 問55", "question": "痛覚の脊髄神経路で正しいのはどれか。", "choices": ["薄束", "楔状束", "赤核脊髄路", "外側脊髄視床路", "外側皮質脊髄路"], "answers": [4], "point": "痛覚および温度覚を伝える脊髄伝導路は外側脊髄視床路である。", "choiceNotes": ["× 下半身からの深部知覚を伝える。", "× 上半身からの深部知覚を伝える。", "× 中脳赤核から脊髄へ至る下行性伝導路である。", "○ 対側の側索を上行して視床に至る。", "× 大脳皮質から脊髄へ至る下行性伝導路である。"]},
+      {"id": "48-AM-55", "meta": "第48回 午前 問55", "question": "下行性の神経線維が通るのはどれか。", "choices": ["薄束", "錐体", "楔状束", "内側毛帯", "外側毛帯"], "answers": [2], "point": "延髄の錐体には大脳皮質から脊髄へと下行する皮質脊髄路が通る。", "choiceNotes": ["× 下半身からの深部感覚を伝える上行路である。", "○ 大脳皮質から下行する外側皮質脊髄路が通る。", "× 上半身からの深部感覚を伝える上行路である。", "× 脊髄視床路などが合わさり視床へ上行する感覚伝導路である。", "× 聴覚情報を上行して伝える伝導路である。"]},
+      {"id": "57-PM-55", "meta": "第57回 午後 問55", "question": "脊髄について正しいのはどれか。", "choices": ["体性感覚神経の一次ニューロンの細胞体は後根神経節に存在する。", "白質はその大部分を神経細胞の細胞体が占める。", "運動神経細胞は後角にある。", "深部感覚は前索を上行する。", "温痛覚は後索を上行する。"], "answers": [1], "point": "体性感覚の一次求心性神経の細胞体は脊髄後根神経節（DRG）に存在する。", "choiceNotes": ["○ 1次求心性神経の細胞体は脊髄後根神経節（DRG）にある。", "× 神経細胞の細胞体が大部分を占めるのは灰白質である。", "× 運動神経細胞は前角にある。", "× 深部感覚は後索を上行する。", "× 温痛覚は側索を上行する。"]},
+      {"id": "51-PM-56", "meta": "第51回 午後 問56", "question": "後脊髄小脳路が通るのはどれか。", "choices": ["大脳脚", "内側毛帯", "上小脳脚", "中小脳脚", "下小脳脚"], "answers": [5], "point": "後脊髄小脳路は下半身の深部感覚を伝え、同側性に側索を上行して下小脳脚を経て小脳に至る。", "choiceNotes": ["× 中脳腹側にあり下行性線維が通る。", "× 深部感覚を視床へ伝える上行路である。", "× 主に小脳からの出力路などが通る。", "× 橋核から小脳への線維が通る。", "○ 側索後外側部を上行し、下小脳脚を経て小脳に至る。"]},
+      {"id": "58-AM-52", "meta": "第58回 午前 問52", "question": "下行神経路はどれか。", "choices": ["後脊髄小脳路", "前脊髄視床路", "前脊髄小脳路", "外側脊髄視床路", "外側皮質脊髄路"], "answers": [5], "point": "外側皮質脊髄路は大脳皮質運動野から脊髄前角へ下行する随意運動の伝導路である。", "choiceNotes": ["× 脊髄から小脳へ至る上行神経路である。", "× 粗大触・圧覚を伝える上行神経路である。", "× 運動指令や深部感覚を小脳へ伝える上行神経路である。", "× 温痛覚を伝える上行神経路である。", "○ 錐体交叉を経て側索を下行する下行神経路である。"]},
+      {"id": "55-AM-52", "meta": "第55回 午前 問52", "question": "錐体路を含むのはどれか。", "choices": ["脳梁", "大脳脚", "上小脳脚", "中小脳脚", "下小脳脚"], "answers": [2], "point": "錐体路（皮質脊髄路・皮質核路）は中脳の大脳脚を通過する。", "choiceNotes": ["× 左右の大脳皮質を連結する交連線維である。", "○ 内包後脚を通り、次いで大脳脚から橋縦束を経て延髄に至る。", "× 主に歯状核から赤核や視床へ向かう線維が通る。", "× 橋核から小脳へ向かう線維が通る。", "× 脊髄や延髄から小脳に至る線維が通る。"]},
+      {"id": "43-PM-09", "meta": "第43回 午後 問9", "question": "誤っているのはどれか。", "choices": ["内側毛帯は延髄で交叉する", "脊髄視床路は脊髄で交叉する", "前皮質脊髄路は延髄で交叉する", "網様体脊髄路は脳幹と脊髄とを結ぶ", "皮質脊髄路は大脳皮質と脊髄前角とを結ぶ"], "answers": [3], "point": "前皮質脊髄路は延髄で交叉せずに同側前索を下行し、目的の脊髄髄節で白交連を介して交叉する。", "choiceNotes": ["○ 延髄後索核からの線維が延髄で交叉（毛帯交叉）する。", "○ 脊髄後角からの二次線維が脊髄白交連で対側に交叉する。", "× 延髄で交叉せずにそのまま前索を下行する。", "○ 脳幹網様体と脊髄を結ぶ下行路である。", "○ 大脳皮質運動野から起こり脊髄前角細胞と結合する。"]},
+      {"id": "60-AM-59", "meta": "第60回 午前 問59", "question": "脊髄で運動神経の細胞体が主に存在する部位はどれか。", "choices": ["後角", "後索", "前角", "前索", "側索"], "answers": [3], "point": "骨格筋を支配する運動神経細胞体（前角細胞）は脊髄前角に存在する。", "choiceNotes": ["× 感覚神経の二次ニューロン等が存在する。", "× 上行性の感覚神経線維（白質）が通る。", "○ 運動神経細胞体（下位運動ニューロン）が主に存在する。", "× 神経線維（白質）が通る。", "× 自律神経側角や白質線維が通る。"]},
+      {"id": "61-AM-54", "meta": "第61回 午前 問54", "question": "外側毛帯が伝える感覚情報はどれか。", "choices": ["嗅覚", "視覚", "聴覚", "痛覚", "深部覚"], "answers": [3], "point": "外側毛帯は内耳（蝸牛神経核）からの聴覚情報を中脳下丘へと伝える伝導路である。", "choiceNotes": ["× 嗅細胞→嗅球→嗅索→嗅覚野へ伝達される。", "× 網膜→視神経→視交叉→外側膝状体→一次視覚野へ伝達される。", "○ 蝸牛神経核から上オリーブ核等を経て外側毛帯となり下丘へ至る。", "× 外側脊髄視床路により視床へ伝達される。", "× 後索-内側毛帯路により視床へ伝達される。"]},
+      {"id": "59-PM-54", "meta": "第59回 午後 問54", "question": "温痛覚の経路はどれか。", "choices": ["脊髄小脳路", "皮質脊髄路", "前脊髄視床路", "網様体脊髄路", "外側脊髄視床路"], "answers": [5], "point": "温痛覚を伝える上行性伝導路は外側脊髄視床路である。", "choiceNotes": ["× 深部感覚の経路である。", "× 随意運動（運動系）の経路である。", "× 粗大触・圧覚の経路である。", "× 姿勢制御に関する経路である。", "○ 温痛覚を伝える経路である。"]}
+    ];
+
+    const KokushiModule = (() => {
+      let sessionQuestions = [];
+      let currentIdx = 0;
+      let selectedNums = new Set();
+      let isAnswered = false;
+      let correctCount = 0;
+      let sessionMissed = [];
+
+      function loadRecord() {
+        try {
+          const raw = JSON.parse(localStorage.getItem(KOKUSHI_STORAGE_KEY) || "{}");
+          const validIds = new Set(KOKUSHI_DATA.map(q => q.id));
+          const clearedIds = Array.isArray(raw.clearedIds)
+            ? raw.clearedIds.filter(id => validIds.has(id))
+            : [];
+          const weakIds = Array.isArray(raw.weakIds)
+            ? raw.weakIds.filter(id => validIds.has(id))
+            : [];
+          return { clearedIds: [...new Set(clearedIds)], weakIds: [...new Set(weakIds)] };
+        } catch (e) {
+          return { clearedIds: [], weakIds: [] };
+        }
+      }
+
+      function saveRecord(rec) {
+        try {
+          localStorage.setItem(KOKUSHI_STORAGE_KEY, JSON.stringify({
+            clearedIds: [...new Set(rec.clearedIds)],
+            weakIds: [...new Set(rec.weakIds)]
+          }));
+        } catch (e) {}
+      }
+
+      function updateEntryBadge() {
+        const rec = loadRecord();
+        const el = document.getElementById("kokushiEntryBadge");
+        if (el) {
+          el.textContent = `クリア済 ${rec.clearedIds.length} / ${KOKUSHI_DATA.length}問`;
+        }
+      }
+
+      function openStartScreen() {
+        stopTimer();
+        playSound("tap");
+
+        const rec = loadRecord();
+        const total = KOKUSHI_DATA.length;
+        const cleared = rec.clearedIds.length;
+        const pct = total > 0 ? Math.round((cleared / total) * 100) : 0;
+
+        document.getElementById("kokushiStartProgressText").textContent = `クリア済 ${cleared} / ${total}問`;
+        document.getElementById("kokushiStartProgressPct").textContent = `${pct}%`;
+        document.getElementById("kokushiStartProgressBar").style.width = `${pct}%`;
+
+        const weakBtn = document.getElementById("kokushiBtnWeak");
+        if (rec.weakIds.length > 0) {
+          weakBtn.style.display = "flex";
+          document.getElementById("kokushiWeakCount").textContent = String(rec.weakIds.length);
+        } else {
+          weakBtn.style.display = "none";
+        }
+
+        showScreen("kokushiStartScreen");
+      }
+
+      function startSession(course) {
+        playSound("tap");
+        const rec = loadRecord();
+
+        if (course === "weak") {
+          sessionQuestions = shuffle(KOKUSHI_DATA.filter(q => rec.weakIds.includes(q.id)));
+          if (sessionQuestions.length === 0) {
+            openStartScreen();
+            return;
+          }
+        } else if (course === "rand5") {
+          sessionQuestions = shuffle(KOKUSHI_DATA).slice(0, 5);
+        } else if (course === "rand10") {
+          sessionQuestions = shuffle(KOKUSHI_DATA).slice(0, 10);
+        } else {
+          sessionQuestions = shuffle(KOKUSHI_DATA);
+        }
+
+        currentIdx = 0;
+        correctCount = 0;
+        sessionMissed = [];
+
+        showScreen("kokushiPlayScreen");
+        renderQuestion();
+      }
+
+      function renderQuestion() {
+        const q = sessionQuestions[currentIdx];
+        const isMulti = q.answers.length > 1;
+
+        selectedNums = new Set();
+        isAnswered = false;
+
+        document.getElementById("kokushiMetaBadge").textContent = q.meta;
+        const typeBadge = document.getElementById("kokushiTypeBadge");
+        typeBadge.className = `kokushi-type-badge ${isMulti ? "multi" : "single"}`;
+        typeBadge.textContent = isMulti ? "【2つ選べ】" : "【1つ選べ】";
+
+        document.getElementById("kokushiPlayProgress").textContent = `${currentIdx + 1} / ${sessionQuestions.length}`;
+        document.getElementById("kokushiQuestionText").textContent = q.question;
+        document.getElementById("kokushiExplainCard").className = "kokushi-explain-card";
+
+        renderChoices();
+      }
+
+      function renderChoices() {
+        const q = sessionQuestions[currentIdx];
+        const listEl = document.getElementById("kokushiChoicesList");
+        listEl.innerHTML = "";
+
+        q.choices.forEach((choiceText, idx) => {
+          const num = idx + 1;
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "kokushi-choice-btn";
+
+          if (!isAnswered) {
+            if (selectedNums.has(num)) btn.classList.add("selected");
+          } else {
+            btn.disabled = true;
+            const isAns = q.answers.includes(num);
+            const isSel = selectedNums.has(num);
+            if (isAns) {
+              btn.classList.add("is-correct");
+            } else if (isSel && !isAns) {
+              btn.classList.add("is-wrong");
+            }
+          }
+
+          btn.innerHTML = `
+            <span class="kokushi-choice-num">${num}</span>
+            <span>${choiceText}</span>
+          `;
+          btn.onclick = () => onTapChoice(num);
+          listEl.appendChild(btn);
+        });
+      }
+
+      function onTapChoice(num) {
+        if (isAnswered) return;
+        const q = sessionQuestions[currentIdx];
+        const required = q.answers.length;
+
+        if (required === 1) {
+          selectedNums.add(num);
+          judgeCurrentQuestion();
+        } else {
+          if (selectedNums.has(num)) {
+            playSound("tap");
+            selectedNums.delete(num);
+            renderChoices();
+          } else {
+            selectedNums.add(num);
+            if (selectedNums.size >= required) {
+              judgeCurrentQuestion();
+            } else {
+              playSound("tap");
+              renderChoices();
+            }
+          }
+        }
+      }
+
+      function judgeCurrentQuestion() {
+        isAnswered = true;
+        const q = sessionQuestions[currentIdx];
+        const sortedSel = [...selectedNums].sort((a, b) => a - b);
+        const sortedAns = [...q.answers].sort((a, b) => a - b);
+
+        const isCorrect =
+          sortedSel.length === sortedAns.length &&
+          sortedSel.every((v, i) => v === sortedAns[i]);
+
+        const rec = loadRecord();
+        if (isCorrect) {
+          playSound("ok");
+          correctCount++;
+          if (!rec.clearedIds.includes(q.id)) rec.clearedIds.push(q.id);
+          rec.weakIds = rec.weakIds.filter(id => id !== q.id);
+        } else {
+          playSound("ng");
+          sessionMissed.push(q);
+          if (!rec.weakIds.includes(q.id)) rec.weakIds.push(q.id);
+        }
+        saveRecord(rec);
+        updateEntryBadge();
+
+        renderChoices();
+
+        const expCard = document.getElementById("kokushiExplainCard");
+        expCard.className = `kokushi-explain-card open ${isCorrect ? "ok" : "ng"}`;
+
+        const judgeTitle = document.getElementById("kokushiJudgeTitle");
+        judgeTitle.className = `kokushi-judge-title ${isCorrect ? "ok" : "ng"}`;
+        judgeTitle.innerHTML = `
+          <span>${isCorrect ? "⭕ 正解！" : "❌ 不正解…"}</span>
+          <span style="font-size:0.84rem;">正解：${sortedAns.join("・")}</span>
+        `;
+
+        document.getElementById("kokushiPointBox").innerHTML =
+          `<strong>💡 要点解説：</strong>${q.point}`;
+
+        document.getElementById("kokushiNotesList").innerHTML = q.choices.map((_, i) => {
+          const num = i + 1;
+          const isAns = q.answers.includes(num);
+          const note = (q.choiceNotes && q.choiceNotes[i]) ? q.choiceNotes[i] : (isAns ? "○ 正解" : "×");
+          return `
+            <div class="kokushi-note-row ${isAns ? "ans-row" : ""}">
+              <span class="kokushi-note-num">${num}.</span>
+              <span>${note}</span>
+            </div>
+          `;
+        }).join("");
+
+        document.getElementById("kokushiNextBtn").textContent =
+          (currentIdx + 1 < sessionQuestions.length) ? "次の問題へ ▶" : "結果を見る ▶";
+      }
+
+      function nextQuestion() {
+        playSound("tap");
+        currentIdx++;
+        if (currentIdx >= sessionQuestions.length) {
+          finishSession();
+        } else {
+          renderQuestion();
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+      }
+
+      function finishSession() {
+        playSound("clear");
+        const total = sessionQuestions.length;
+        const rate = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+
+        let rank = "B";
+        let subText = "間違えた問題の解説を見直して、弱点復習でリベンジしよう！";
+        if (rate >= 90) {
+          rank = "S";
+          subText = "素晴らしい！神経伝導路の国試対策は合格圏内バッチリです！";
+        } else if (rate >= 70) {
+          rank = "A";
+          subText = "あと少し！間違えた問題を潰せば完璧に仕上がります！";
+        }
+
+        const rec = loadRecord();
+        const rankEl = document.getElementById("kokushiRankBadge");
+        rankEl.textContent = rank;
+        rankEl.className = `rank-badge ${rank}`;
+
+        document.getElementById("kokushiResultSub").textContent = subText;
+        document.getElementById("kokushiFinalScore").textContent = `${correctCount} / ${total}問`;
+        document.getElementById("kokushiFinalRate").textContent = `${rate}%`;
+        document.getElementById("kokushiFinalCleared").textContent = `${rec.clearedIds.length} / ${KOKUSHI_DATA.length}問`;
+
+        const missTitle = document.getElementById("kokushiMissTitle");
+        const missListEl = document.getElementById("kokushiMissList");
+
+        if (sessionMissed.length > 0) {
+          missTitle.textContent = `今回間違えた問題（${sessionMissed.length}問・弱点リストに登録済み）`;
+          missListEl.innerHTML = sessionMissed.map(q => `
+            <div class="kokushi-miss-item">
+              <div class="kokushi-miss-meta">${q.meta}（正解：${q.answers.join("・")}）</div>
+              <div class="kokushi-miss-q">${q.question}</div>
+              <div style="color:var(--muted);">💡 ${q.point}</div>
+            </div>
+          `).join("");
+        } else {
+          missTitle.textContent = "今回の結果";
+          missListEl.innerHTML = `<div class="perfect-box">🎉 全問正解パーフェクト！全19問制覇を目指そう！</div>`;
+        }
+
+        const weakBtn = document.getElementById("kokushiResultWeakBtn");
+        if (rec.weakIds.length > 0) {
+          weakBtn.style.display = "block";
+          document.getElementById("kokushiResultWeakCount").textContent = String(rec.weakIds.length);
+        } else {
+          weakBtn.style.display = "none";
+        }
+
+        showScreen("kokushiResultScreen");
+      }
+
+      function init() {
+        document.getElementById("kokushiEntryBtn").onclick = openStartScreen;
+        document.getElementById("kokushiBtnRand5").onclick = () => startSession("rand5");
+        document.getElementById("kokushiBtnRand10").onclick = () => startSession("rand10");
+        document.getElementById("kokushiBtnAll").onclick = () => startSession("all");
+        document.getElementById("kokushiBtnWeak").onclick = () => startSession("weak");
+        document.getElementById("kokushiNextBtn").onclick = nextQuestion;
+        document.getElementById("kokushiQuitBtn").onclick = openStartScreen;
+        document.getElementById("kokushiResultWeakBtn").onclick = () => startSession("weak");
+        document.getElementById("kokushiToTopBtn").onclick = openStartScreen;
+
+        const backToBase = () => {
+          playSound("tap");
+          renderStartScreen();
+          showScreen("startScreen");
+        };
+        document.getElementById("kokushiBackToBaseBtn").onclick = backToBase;
+        document.getElementById("kokushiResultBackBtn").onclick = backToBase;
+      }
+
+      return { init, updateEntryBadge };
+    })();
+
+    /**
+     * =========================================================================
+     * 9. イベントリスナー登録・初期化
      * =========================================================================
      */
     document.getElementById("soundToggle").onclick = (e) => {
@@ -1478,56 +3129,72 @@
       if (soundOn) playSound("tap");
     };
 
-    document.querySelectorAll(".mode-btn").forEach(btn => {
+    // 3タブ切替
+    document.getElementById("tabPuzzleBtn").onclick = () => { playSound("tap"); activeTab = "puzzle"; renderStartScreen(); };
+    document.getElementById("tabMatchBtn").onclick = () => { playSound("tap"); activeTab = "match"; renderStartScreen(); };
+    document.getElementById("tabSummaryBtn").onclick = () => { playSound("tap"); activeTab = "summary"; renderStartScreen(); };
+
+    // タブ②：マッチングコース選択
+    document.querySelectorAll(".match-course-btn").forEach(btn => {
       btn.onclick = () => {
         playSound("tap");
-        currentDiff = btn.dataset.diff;
-        document.querySelectorAll(".mode-btn").forEach(b => b.classList.remove("selected"));
+        document.querySelectorAll(".match-course-btn").forEach(b => b.classList.remove("selected"));
         btn.classList.add("selected");
+        selectedMatchCourse = btn.dataset.course;
         renderStartScreen();
       };
     });
 
-    document.getElementById("randomBtn").onclick = () => {
+    // ゲーム開始ボタン
+    document.getElementById("startPuzzleBtn").onclick = startPuzzleGame;
+    document.getElementById("startMatchBtn").onclick = () => startMatchGame(false);
+    document.getElementById("weakMatchBtn").onclick = () => startMatchGame(true);
+
+    // パズル操作
+    document.getElementById("resetPuzzleBtn").onclick = () => {
+      if (puzzleState.isLocked) return;
       playSound("tap");
-      const randIdx = Math.floor(Math.random() * PATHWAYS.length);
-      startPathway(randIdx);
+      hidePuzzleFeedback();
+      resetPuzzleSlots();
     };
+    document.getElementById("submitPuzzleBtn").onclick = checkPuzzleAnswer;
 
-    document.getElementById("resetSlotsBtn").onclick = () => {
-      if (isLocked) return;
-      playSound("tap");
-      hideFeedback();
-      resetAllSlots();
-    };
-
-    document.getElementById("submitBtn").onclick = checkAnswer;
-
-    document.getElementById("quitBtn").onclick = () => {
-      clearInterval(timerInterval);
+    // 戻るボタン
+    const backHome = () => {
+      stopTimer();
       playSound("tap");
       renderStartScreen();
       showScreen("startScreen");
+    };
+    document.getElementById("quitPuzzleBtn").onclick = backHome;
+    document.getElementById("quitMatchBtn").onclick = backHome;
+    document.getElementById("backHomeBtn").onclick = backHome;
+
+    // リザルト操作
+    document.getElementById("toggleTopicAnswer").onclick = () => {
+      playSound("tap");
+      document.getElementById("topicAnswer").classList.toggle("open");
     };
 
     document.getElementById("retryBtn").onclick = () => {
-      playSound("tap");
-      startPathway(currentPathwayIndex);
+      if (!lastSession) {
+        backHome();
+        return;
+      }
+      if (lastSession.tab === "puzzle") {
+        selectedRouteId = lastSession.routeId;
+        startPuzzleGame();
+      } else {
+        if (lastSession.isWeakMode && getWeakMatchIds().length === 0) {
+          backHome();
+          return;
+        }
+        startMatchGame(lastSession.isWeakMode);
+      }
     };
 
-    document.getElementById("nextBtn").onclick = () => {
-      playSound("tap");
-      const nextIdx = (currentPathwayIndex + 1) % PATHWAYS.length;
-      startPathway(nextIdx);
-    };
-
-    document.getElementById("backListBtn").onclick = () => {
-      playSound("tap");
-      renderStartScreen();
-      showScreen("startScreen");
-    };
-
-    // 初期表示
+    // 初期化
+    KokushiModule.init();
     renderStartScreen();
   </script>
 </body>
